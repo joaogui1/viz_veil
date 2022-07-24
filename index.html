@@ -9,11 +9,12 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
     <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js"></script>
 
     <py-env>
         - numpy
         - matplotlib
+        - pandas
+        - cloudpickle
         - paths:
           - /request.py
     </py-env>
@@ -21,35 +22,16 @@
   </head>
 
   <body>
-    <!-- <script type="text/javascript">
-        async function main(){
-            let pyodide = await loadPyodide();
-            await pyodide.runPythonAsync(`
-                    from pyodide.http import pyfetch
-                    response = await pyfetch("https://github.com/joaogui1/viz_veil/blob/main/convs_normalization.pickle", mode="no-cors")
-                    print("RESPONSE IS:", response.json(), response.string())
-                    if response.status == 200:
-                       print("OK!")
-                    `)
-        }
-        main();
-    </script> -->
     Hello world! <br>
     This is the current date and time, as computed by Python:
     <py-script>
-        import asyncio  # important!!
-        import json
         from request import request
 
         import matplotlib.pyplot as plt
         import numpy as np
-        import os
-
-        headers = {"Content-type": "application/pickle", "Access-Control-Allow-Origin": "*"}
-        baseurl = "https://raw.githubusercontent.com/joaogui1/viz_veil/main/"
-        response = await request(baseurl+"index.html", method="GET", headers=headers)
-        print(f"GET request=> status:{response.status}")
-        <!-- c = np.load('/Users/joaogui1/Documents/Programming/viz_veil/convs_normalization.pickle', allow_pickle=True) -->
+        from pyodide.http import open_url
+        import cloudpickle as cp
+        loaded_pickle_object = cp.load(open_url("https://raw.githubusercontent.com/joaogui1/viz_veil/main/convs_normalization.pickle")) 
 
 
         a = np.linspace(-1, 1, 10)
