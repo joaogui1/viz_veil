@@ -13,10 +13,11 @@
     <py-env>
         - numpy
         - matplotlib
-        - pandas
-        - cloudpickle
+        - seaborn
+        - scipy
+        - absl-py
         - paths:
-          - /request.py
+            - /fetch_data.py
     </py-env>
     <py-repl></py-repl>
   </head>
@@ -25,16 +26,17 @@
     Hello world! <br>
     This is the current date and time, as computed by Python:
     <py-script>
-        from request import request
 
+        import asyncio
         import matplotlib.pyplot as plt
         import numpy as np
-        from pyodide.http import open_url
-        import cloudpickle as cp
-        s = open_url("https://raw.githubusercontent.com/joaogui1/viz_veil/main/convs_normalization.pickle")
-        a = s.read()
-        <!-- loaded_pickle_object = cp.load(bytes(open_url("https://raw.githubusercontent.com/joaogui1/viz_veil/main/convs_normalization.pickle")))  -->
+        import pickle
+        from fetch_data import fetch_data
 
+        await fetch_data()
+
+        with open('file.pickle', mode='rb') as f:
+            data = pickle.load(f) 
 
         a = np.linspace(-1, 1, 10)
         b = a**2
