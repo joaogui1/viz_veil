@@ -18,6 +18,7 @@
         - absl-py
         - paths:
             - /fetch_data.py
+            - /plot_data.py
     </py-env>
     <py-repl></py-repl>
   </head>
@@ -31,18 +32,23 @@
         import matplotlib.pyplot as plt
         import numpy as np
         import pickle
+
         from fetch_data import fetch_data
+        from plot_data import plot_score_hist
 
         await fetch_data()
 
         with open('file.pickle', mode='rb') as f:
-            data = pickle.load(f) 
+            data = pickle.load(f)
+        <!-- y = data['DER_normalizations_convs']['DER_normalizations_convs_non_normalization']   -->
 
-        a = np.linspace(-1, 1, 10)
-        b = a**2
-        fig, ax = plt.subplots()
-        ax.scatter(a, b)
+        fig = plot_score_hist(data['DER_normalizations_convs'], bins=4, N=6, figsize=(28, 11))
+        fig.subplots_adjust(hspace=0.85, wspace=0.17)
         fig
+
+        fig2 = plot_score_hist(data['DrQ_eps_normalizations_convs'], bins=4, N=6, figsize=(28, 11))
+        fig2.subplots_adjust(hspace=0.85, wspace=0.17)
+        fig2
     </py-script>
     
   </body>
