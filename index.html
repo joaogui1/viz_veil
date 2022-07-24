@@ -31,7 +31,9 @@
         import numpy as np
         from pyodide.http import open_url
         import cloudpickle as cp
-        loaded_pickle_object = cp.load(open_url("https://raw.githubusercontent.com/joaogui1/viz_veil/main/convs_normalization.pickle")) 
+        s = open_url("https://raw.githubusercontent.com/joaogui1/viz_veil/main/convs_normalization.pickle")
+        a = s.read()
+        <!-- loaded_pickle_object = cp.load(bytes(open_url("https://raw.githubusercontent.com/joaogui1/viz_veil/main/convs_normalization.pickle")))  -->
 
 
         a = np.linspace(-1, 1, 10)
