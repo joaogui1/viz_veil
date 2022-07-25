@@ -1,7 +1,7 @@
 from pyodide.http import pyfetch, FetchResponse
 
-async def fetch_data() -> FetchResponse:
-    resp = await pyfetch("https://raw.githubusercontent.com/joaogui1/viz_veil/main/convs_normalization.pickle")
+async def fetch_data(experiment) -> FetchResponse:
+    resp = await pyfetch(f"https://raw.githubusercontent.com/joaogui1/viz_veil/main/data/{experiment}.pickle")
 
     bytes = await resp.bytes()
 

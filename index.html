@@ -25,31 +25,64 @@
 
   <body>
     Hello world! <br>
-    This is the current date and time, as computed by Python:
+
+    <fieldset>
+        <legend>Agents</legend>
+        <div>
+          <input type="checkbox" id="der" name="agent" value="der">
+          <label for="der">DER</label>
+        </div>
+        <div>
+          <input type="checkbox" id="drq" name="agent" value="drq">
+          <label for="drq">DrQ</label>
+        </div>
+      </fieldset>
+
+    <div id="DER"></div>
+    <div id="DrQ"></div>
     <py-script>
 
+        import js
         import asyncio
         import matplotlib.pyplot as plt
         import numpy as np
         import pickle
 
+        from pyodide import create_proxy
         from fetch_data import fetch_data
         from plot_data import plot_score_hist
 
-        await fetch_data()
+        def on_select_der(event):
+            plot_der = js.document.body.querySelector('#der')
+            if plot_der.checked:
+                fig = plot_score_hist(data['DER_normalizations_convs'], bins=4, N=6, figsize=(28, 11))
+                fig.subplots_adjust(hspace=0.85, wspace=0.17)
+                fig
+                pyscript.write('DER', fig)
+            else:
+                pyscript.write('DER', "")
+
+        def on_select_drq(event):
+                plot_der = js.document.body.querySelector('#drq')
+                if plot_der.checked:
+                    fig = plot_score_hist(data['DrQ_eps_normalizations_convs'], bins=4, N=6, figsize=(28, 11))
+                    fig.subplots_adjust(hspace=0.85, wspace=0.17)
+                    pyscript.write('DrQ', fig)
+                else:
+                    pyscript.write('DrQ', "")
+
+
+        await fetch_data("convs_normalization")
 
         with open('file.pickle', mode='rb') as f:
             data = pickle.load(f)
         <!-- y = data['DER_normalizations_convs']['DER_normalizations_convs_non_normalization']   -->
+        plot_der = js.document.body.querySelector('#der')
+        plot_der.addEventListener('change', create_proxy(on_select_der))
 
-        fig = plot_score_hist(data['DER_normalizations_convs'], bins=4, N=6, figsize=(28, 11))
-        fig.subplots_adjust(hspace=0.85, wspace=0.17)
-        fig
+        plot_drq = js.document.body.querySelector('#drq')
+        plot_drq.addEventListener('change', create_proxy(on_select_drq))
 
-        fig2 = plot_score_hist(data['DrQ_eps_normalizations_convs'], bins=4, N=6, figsize=(28, 11))
-        fig2.subplots_adjust(hspace=0.85, wspace=0.17)
-        fig2
     </py-script>
-    
   </body>
 </html>
