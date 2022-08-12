@@ -1,5 +1,10 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+from rliable import library as rly
+from rliable import metrics
+from rliable import plot_utils
 
 ATARI_100K_GAMES = [
             'Alien', 'Amidar', 'Assault', 'Asterix', 'BankHeist', 'BattleZone',
@@ -60,3 +65,38 @@ def plot_score_hist(data, bins=20, figsize=(28, 14),
         ax[j, i].yaxis.label.set_visible(False)
       ax[j, i].grid(axis='y', alpha=0.1)
   return fig
+
+
+def plot(all_experiments):
+  StratifiedBootstrap = rly.StratifiedBootstrap
+
+  IQM = lambda x: metrics.aggregate_iqm(x) # Interquartile Mean
+  OG = lambda x: metrics.aggregate_optimality_gap(x, 1.0) # Optimality Gap
+  MEAN = lambda x: metrics.aggregate_mean(x)
+  MEDIAN = lambda x: metrics.aggregate_median(x)
+
+  colors = sns.color_palette('colorblind')
+  colors_2 = sns.color_palette("pastel")
+  colors.extend(colors_2)  
+  xlabels = list(all_experiments.keys())
+
+
+  color_idxs = list(np.arange(len(xlabels)))
+  ATARI_100K_COLOR_DICT = dict(zip(xlabels, [colors[idx] for idx in color_idxs]))
+  atari_100k_score_dict = {key: val[:10] for key, val in all_experiments.items()}
+
+  aggregate_func = lambda x: np.array([MEDIAN(x), IQM(x), MEAN(x), OG(x)])
+  aggregate_scores, aggregate_interval_estimates = rly.get_interval_estimates(
+      all_experiments, aggregate_func, reps=50000)
+
+  algorithms = list(all_experiments.keys())
+  fig, axes = plot_utils.plot_interval_estimates(
+      aggregate_scores, 
+      aggregate_interval_estimates,
+      metric_names = ['Median', 'IQM', 'Mean', 'Optimality Gap'],
+      algorithms=algorithms,
+      colors=ATARI_100K_COLOR_DICT,
+      xlabel_y_coordinate=-0.8,
+      xlabel='Human Normalized Score')
+  return fig
+  # plt.show()
