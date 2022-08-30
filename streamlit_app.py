@@ -34,7 +34,7 @@ with open(f'data/{hyp}.pickle', mode='rb') as f:
     data = pickle.load(f)
 
 for ag in agents:
-    if ag == "DrQ_eps" and hyp = "num_atoms":
+    if ag == "DrQ_eps" and hyp == "num_atoms":
         continue
     fig, fig2 = plot_agent(ag, hyp, data)
     st.pyplot(fig)
