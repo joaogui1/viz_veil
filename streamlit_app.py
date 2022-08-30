@@ -18,8 +18,8 @@ agents = st.multiselect("Agents", options=["DrQ_eps", "DER"])
 experiments_mapping = { "Activation Function": "layer_funct",
                         "Adam's epsilon": "epsilon",
                         "Batch Size": "batch_sizes",
-                        "Convolutional Normalization": "convs_normalizations", 
-                        "Dense Normalization": "normalizations",
+                        "Convolutional Normalization": "convs_normalization", 
+                        "Dense Normalization": "normalization",
                         "Discount Factor": "gammas",
                         "Learning Rate": "learning_rate",
                         "Number of Atoms": "num_atoms", 
@@ -34,6 +34,8 @@ with open(f'data/{hyp}.pickle', mode='rb') as f:
     data = pickle.load(f)
 
 for ag in agents:
+    if ag == "DrQ_eps" and hyp = "num_atoms":
+        continue
     fig, fig2 = plot_agent(ag, hyp, data)
     st.pyplot(fig)
     st.pyplot(fig2)

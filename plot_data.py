@@ -99,4 +99,3 @@ def plot(all_experiments):
       xlabel_y_coordinate=-0.8,
       xlabel='Human Normalized Score')
   return fig
-  # plt.show()
