@@ -36,15 +36,19 @@ hyp = experiments_mapping[hyperparameter]
 with open(f'data/final_perf/{hyp}.pickle', mode='rb') as f:
     data = pickle.load(f)
 
-with open(f'data/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
-    data2 = pickle.load(f)
+try:
+    with open(f'data/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
+        data2 = pickle.load(f)
+except:
+    data2 = None
 
 
 for ag in agents:
     if ag == "DrQ_eps" and hyp == "num_atoms":
         continue
     fig, fig2 = plot_agent(ag, hyp, data)
-    fig3 = plot_human_normalized(data2[f'{ag}_{hyp}'])
+    if data2 is not None:
+        fig3 = plot_human_normalized(data2[f'{ag}_{hyp}'])
     st.pyplot(fig)
     st.pyplot(fig2)
     st.pyplot(fig3)
