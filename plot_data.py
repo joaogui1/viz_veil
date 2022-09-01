@@ -15,37 +15,6 @@ ATARI_100K_GAMES = [
             ]
 
 
-def plot_human_normalized(all_experiments):
-  algorithms = list(all_experiments.keys())
-  colors = sns.color_palette('colorblind')
-  colors_2 = sns.color_palette("pastel")
-  colors.extend(colors_2)
-  color_dict = dict(zip(algorithms, colors))
-
-  print('algorithms:', algorithms)
-  # Load ALE scores as a dictionary mapping algorithms to their human normalized
-  # score matrices across all 200 million frames, each of which is of size
-  # `(num_runs x num_games x 200)` where scores are recorded every million frame.
-  ale_all_frames_scores_dict = all_experiments
-  frames = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) - 1
-  ale_frames_scores_dict = {algorithm: score[:, :, frames] for algorithm, score
-                            in ale_all_frames_scores_dict.items()}
-  iqm = lambda scores: np.array([metrics.aggregate_iqm(scores[..., frame])
-                                for frame in range(scores.shape[-1])])
-  iqm_scores, iqm_cis = rly.get_interval_estimates(ale_frames_scores_dict, iqm, reps=2000)
-
-  #fig, ax = plt.subplots(figsize=(7, 4.5))
-  fig, ax = plt.subplots(figsize=(10, 8))
-  plot_utils.plot_sample_efficiency_curve(
-      frames+1, iqm_scores, iqm_cis, 
-      algorithms=algorithms,
-      xlabel=r'Number of Frames (in thousands)',
-      ylabel='IQM Human Normalized Score',
-      legend=True,
-      ax=ax)
-  return fig
-
-
 def decorate_axis(ax, wrect=10, hrect=10, labelsize='large'):
   # Hide the right and top spines
   ax.spines['right'].set_visible(False)
@@ -192,3 +161,34 @@ zaxxon 9173.30 32.50 249808.90 ± 58261.59 370649.03 ± 19761.32 725853.90"""
 
 
 scores = my_str.split('\n')
+
+
+def plot_human_normalized(all_experiments):
+  algorithms = list(all_experiments.keys())
+  colors = sns.color_palette('colorblind')
+  colors_2 = sns.color_palette("pastel")
+  colors.extend(colors_2)
+  color_dict = dict(zip(algorithms, colors))
+
+  print('algorithms:', algorithms)
+  # Load ALE scores as a dictionary mapping algorithms to their human normalized
+  # score matrices across all 200 million frames, each of which is of size
+  # `(num_runs x num_games x 200)` where scores are recorded every million frame.
+  ale_all_frames_scores_dict = all_experiments
+  frames = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) - 1
+  ale_frames_scores_dict = {algorithm: score[:, :, frames] for algorithm, score
+                            in ale_all_frames_scores_dict.items()}
+  iqm = lambda scores: np.array([metrics.aggregate_iqm(scores[..., frame])
+                                for frame in range(scores.shape[-1])])
+  iqm_scores, iqm_cis = rly.get_interval_estimates(ale_frames_scores_dict, iqm, reps=2000)
+
+  #fig, ax = plt.subplots(figsize=(7, 4.5))
+  fig, ax = plt.subplots(figsize=(10, 8))
+  plot_utils.plot_sample_efficiency_curve(
+      frames+1, iqm_scores, iqm_cis, 
+      algorithms=algorithms,
+      xlabel=r'Number of Frames (in thousands)',
+      ylabel='IQM Human Normalized Score',
+      legend=True,
+      ax=ax)
+  return fig
