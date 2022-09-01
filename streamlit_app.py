@@ -27,7 +27,7 @@ experiments_mapping = { "Activation Function": "layer_funct",
                         "Number of Convolutional Layers": "convs", 
                         "Number of Dense Layers": "depths",
                         "Reward Clipping": "clip_rewards",
-                        "Update Horizon": "update_horizont",
+                        "Update Horizon": "update_horizon",
                         "Weight Decay": "weightdecay",
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
