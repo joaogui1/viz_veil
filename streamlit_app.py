@@ -47,8 +47,8 @@ for ag in agents:
     if ag == "DrQ_eps" and hyp == "num_atoms":
         continue
     fig, fig2 = plot_agent(ag, hyp, data)
-    if data2 is not None:
-        fig3 = plot_human_normalized(data2[f'{ag}_{hyp}'])
     st.pyplot(fig)
     st.pyplot(fig2)
-    st.pyplot(fig3)
+    if data2 is not None:
+        fig3 = plot_human_normalized(data2[f'{ag}_{hyp}'])
+        st.pyplot(fig3)
