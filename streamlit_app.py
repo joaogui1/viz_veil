@@ -4,12 +4,9 @@ import pickle
 
 from plot_data import plot_score_hist, plot, plot_human_normalized
 
-@st.experimental_memo
-def plot_agent(ag, hyp, data):
-    fig = plot_score_hist(data[f'{ag}_{hyp}'], bins=4, N=6, figsize=(28, 11))
-    fig.subplots_adjust(hspace=0.85, wspace=0.17)
-    fig2 = plot(data[f'{ag}_{hyp}'])
-    return fig, fig2
+plot = st.experimental_memo(plot)
+plot_human_normalized = st.experimental_memo(plot_human_normalized)
+
 
 st.title("Lifting the Veil")
 # text = st.text_input()
@@ -46,9 +43,8 @@ except:
 for ag in agents:
     if ag == "DrQ_eps" and hyp == "num_atoms":
         continue
-    fig, fig2 = plot_agent(ag, hyp, data)
+    fig = plot(data[f'{ag}_{hyp}'])
     st.pyplot(fig)
-    st.pyplot(fig2)
     if data2 is not None:
-        fig3 = plot_human_normalized(data2[f'{ag}_{hyp}'])
-        st.pyplot(fig3)
+        fig2 = plot_human_normalized(data2[f'{ag}_{hyp}'])
+        st.pyplot(fig2)
