@@ -2,11 +2,12 @@ import streamlit as st
 
 import pickle
 
-from plot_data import plot_score_hist, plot, plot_human_normalized
+from plot_data import plot, plot_human_normalized
 
 plot = st.experimental_memo(plot)
 plot_human_normalized = st.experimental_memo(plot_human_normalized)
 
+st.set_page_config(layout="wide")
 
 st.title("Lifting the Veil")
 # text = st.text_input()
@@ -39,12 +40,19 @@ try:
 except:
     data2 = None
 
+col1, col2 = st.columns(2)
+ag_col = {"DrQ_eps": col1, "DER": col2}
+
+
+col1.subheader('DrQ Epsilon')
+
+col2.subheader('DER')
 
 for ag in agents:
     if ag == "DrQ_eps" and hyp == "num_atoms":
         continue
     fig = plot(data[f'{ag}_{hyp}'])
-    st.pyplot(fig)
+    ag_col[ag].pyplot(fig)
     if data2 is not None:
         fig2 = plot_human_normalized(data2[f'{ag}_{hyp}'])
-        st.pyplot(fig2)
+        ag_col[ag].pyplot(fig2)
