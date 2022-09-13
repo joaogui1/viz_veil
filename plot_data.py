@@ -160,7 +160,7 @@ yars_revenge 54576.90 3092.90 998532.37 ± 375.82 999807.02 ± 54.85 553311.46
 zaxxon 9173.30 32.50 249808.90 ± 58261.59 370649.03 ± 19761.32 725853.90"""
 
 
-scores = my_str.split('\n')
+human_scores = my_str.split('\n')
 
 
 def plot_human_normalized(all_experiments):
