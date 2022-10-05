@@ -1,3 +1,6 @@
+import glob
+import pickle
+
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -201,7 +204,7 @@ def plot_all_games(df):
   num_cols = 4
   num_rows = 7 
   col, row = 0, 0
-  fig, axes = plt.subplots(num_rows, num_cols, figsize=(8 * num_cols, 8 * num_rows))
+  fig, axes = plt.subplots(num_rows, num_cols, figsize=(4 * 8 * num_cols, 4 * 8 * num_rows))
   for env in envs:
     for key in ylabels.keys():
       env_df = df[key]
@@ -217,6 +220,37 @@ def plot_all_games(df):
         ax.set_yscale('symlog')
       col += 1
       if col == num_cols:
+        col = 0
+        row += 1
+  return fig
+
+def plot_game(agent, env):
+  num_cols = 6
+  num_rows = 3
+  fig, axes = plt.subplots(num_rows, num_cols, figsize=(8 * num_cols, 8 * num_rows))
+  data_path = 'data/curves_all_games/*.pickle'
+  col, row = 0, 0
+  for filename in glob.glob(data_path):
+    if "optimizer" in filename:
+        continue
+    if "atoms" in filename and agent != "DER":
+        continue
+    with open(filename, mode='rb') as f:
+        data = pickle.load(f)
+    
+    keys = sorted(list(data.keys()))
+    hp_key = keys[0] if agent == "DER" else keys[1]
+    env_data = data[hp_key]['returns'][data[hp_key]['returns']['env'] == env]
+    
+    ax = axes[row, col]
+    sns.lineplot(x='step', y='val', hue='sweep', data=env_data, ax=ax)
+    title = hp_key[len(agent) + 1:]#hp_key.removeprefix(agent + '_')
+    ax.set_title(title, fontsize=22)
+    ax.set_ylabel('Returns', fontsize=18)
+    xlabel = 'Step'
+    ax.set_xlabel(xlabel, fontsize=18)
+    col += 1
+    if col == num_cols:
         col = 0
         row += 1
   return fig
