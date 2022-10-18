@@ -1,7 +1,5 @@
 import glob
 import pickle
-import PIL 
-PIL.Image.MAX_IMAGE_PIXELS = 933120000
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -128,7 +126,7 @@ zaxxon 9173.30 32.50 249808.90 ± 58261.59 370649.03 ± 19761.32 725853.90"""
 human_scores = my_str.split('\n')
 
 
-def plot_human_normalized(all_experiments):
+def plot_human_normalized(all_experiments, scale='100k'):
   algorithms = list(all_experiments.keys())
   colors = sns.color_palette('colorblind')
   colors_2 = sns.color_palette("pastel")
@@ -140,7 +138,10 @@ def plot_human_normalized(all_experiments):
   # score matrices across all 200 million frames, each of which is of size
   # `(num_runs x num_games x 200)` where scores are recorded every million frame.
   ale_all_frames_scores_dict = all_experiments
-  frames = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) - 1
+  if scale == '100k':
+    frames = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) - 1
+  if scale == '40M':
+    frames = np.array([1, 5, 10, 15, 20, 25, 30, 35, 40]) - 1
   ale_frames_scores_dict = {algorithm: score[:, :, frames] for algorithm, score
                             in ale_all_frames_scores_dict.items()}
   iqm = lambda scores: np.array([metrics.aggregate_iqm(scores[..., frame])

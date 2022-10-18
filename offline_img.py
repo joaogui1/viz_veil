@@ -1,6 +1,7 @@
 import os
 import pickle
 
+import matplotlib.pyplot as plt
 from plot_data import plot, plot_human_normalized, plot_all_games
 
 agents = ["DrQ_eps", "DER"]
@@ -27,44 +28,47 @@ experiments_mapping = { "Activation Function": "layer_funct",
 
 for hyperparameter, hyp in experiments_mapping.items():
     if hyp in ["gammas", "layer_funct", "convs_normalization"]:
-        shim = "40M_experiments"
+        shims = ["100k_experiments", "40M_experiments"]
     else:
-        shim = "100k_experiments"
-    with open(f'data/{shim}/final_perf/{hyp}.pickle', mode='rb') as f:
-        data = pickle.load(f)
+        shims = ["100k_experiments"]
+    
+    for shim in shims:
+        with open(f'data/{shim}/final_perf/{hyp}.pickle', mode='rb') as f:
+            data = pickle.load(f)
 
-    try:
-        with open(f'data/{shim}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
-            data2 = pickle.load(f)
-    except:
-        data2 = None
+        try:
+            with open(f'data/{shim}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
+                data2 = pickle.load(f)
+        except:
+            data2 = None
 
-    with open(f'data/{shim}/curves_all_games/{hyp}.pickle', mode='rb') as f:
-        data3 = pickle.load(f)
+        with open(f'data/{shim}/curves_all_games/{hyp}.pickle', mode='rb') as f:
+            data3 = pickle.load(f)
 
 
-    for ag in agents:
-        if ag == "DrQ_eps" and hyp == "num_atoms":
-            continue
-        fig = plot(data[f'{ag}_{hyp}'])
-        
-        save_dir = f"figures/{shim}/IQM/{hyperparameter}"
-        if not os.path.isdir(save_dir):
-            os.makedirs(save_dir)
-        fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
-
-        if data2 is not None:
-            fig2 = plot_human_normalized(data2[f'{ag}_{hyp}'])
-        
-            save_dir = f"figures/{shim}/HNS/{hyperparameter}"
+        for ag in agents:
+            if ag == "DrQ_eps" and hyp == "num_atoms":
+                continue
+            fig = plot(data[f'{ag}_{hyp}'])
+            
+            save_dir = f"figures/{shim}/IQM/{hyperparameter}"
             if not os.path.isdir(save_dir):
                 os.makedirs(save_dir)
-            fig2.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+            fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
 
-        fig3 = plot_all_games(data3[f'{ag}_{hyp}'])
+            if data2 is not None:
+                fig2 = plot_human_normalized(data2[f'{ag}_{hyp}'], scale=shim.split('_')[0])
+            
+                save_dir = f"figures/{shim}/HNS/{hyperparameter}"
+                if not os.path.isdir(save_dir):
+                    os.makedirs(save_dir)
+                fig2.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
 
-        save_dir = f"figures/{shim}/all_games/{hyperparameter}"
-        if not os.path.isdir(save_dir):
-            os.makedirs(save_dir)
-        fig3.savefig(f"{save_dir}/{ag}.png")
+            fig3 = plot_all_games(data3[f'{ag}_{hyp}'])
+
+            save_dir = f"figures/{shim}/all_games/{hyperparameter}"
+            if not os.path.isdir(save_dir):
+                os.makedirs(save_dir)
+            fig3.savefig(f"{save_dir}/{ag}.png")
+            plt.close()
 
