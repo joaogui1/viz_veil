@@ -32,7 +32,6 @@ def decorate_axis(ax, wrect=10, hrect=10, labelsize='large'):
   ax.spines['left'].set_position(('outward', hrect))
   ax.spines['bottom'].set_position(('outward', wrect))
 
-
 def plot(all_experiments):
   StratifiedBootstrap = rly.StratifiedBootstrap
 
@@ -172,6 +171,7 @@ def plot_all_games(df):
     for key in ylabels.keys():
       env_df = df[key]
       env_df = env_df[env_df.env == env]
+      env_df = env_df[env_df['step'] % 4 == 0]
       ax = axes[row, col]
       sns.lineplot(x='step', y='val', hue='sweep', data=env_df, ax=ax)
       title = f'{env}'
