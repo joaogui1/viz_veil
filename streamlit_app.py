@@ -34,17 +34,20 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
-
-with open(f'data/final_perf/{hyp}.pickle', mode='rb') as f:
+# if hyp in ["gammas", "layer_funct", "normalization"]:
+#     shim = "40M_experiments"
+# else:
+shim = "100k_experiments"
+with open(f'data/{shim}/final_perf/{hyp}.pickle', mode='rb') as f:
     data = pickle.load(f)
 
 try:
-    with open(f'data/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
+    with open(f'data/{shim}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
         data2 = pickle.load(f)
 except:
     data2 = None
 
-with open(f'data/curves_all_games/{hyp}.pickle', mode='rb') as f:
+with open(f'data/100k_experiments/curves_all_games/{hyp}.pickle', mode='rb') as f:
     data3 = pickle.load(f)
 
 col1, col2 = st.columns(2)

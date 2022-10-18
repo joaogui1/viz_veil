@@ -1,5 +1,7 @@
 import glob
 import pickle
+import PIL 
+PIL.Image.MAX_IMAGE_PIXELS = 933120000
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -228,7 +230,7 @@ def plot_game(agent, env):
   num_cols = 6
   num_rows = 3
   fig, axes = plt.subplots(num_rows, num_cols, figsize=(8 * num_cols, 8 * num_rows))
-  data_path = 'data/curves_all_games/*.pickle'
+  data_path = 'data/100k_experiments/curves_all_games/*.pickle'
   col, row = 0, 0
   for filename in glob.glob(data_path):
     if "optimizer" in filename:
