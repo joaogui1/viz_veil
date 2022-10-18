@@ -1,5 +1,6 @@
 import streamlit as st
 
+import os
 import pickle
 
 from plot_data import plot, plot_human_normalized, plot_all_games
@@ -34,7 +35,7 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
-# if hyp in ["gammas", "layer_funct", "normalization"]:
+# if hyp in ["gammas", "layer_funct", "convs_normalization"]:
 #     shim = "40M_experiments"
 # else:
 shim = "100k_experiments"
@@ -47,12 +48,11 @@ try:
 except:
     data2 = None
 
-with open(f'data/100k_experiments/curves_all_games/{hyp}.pickle', mode='rb') as f:
+with open(f'data/{shim}/curves_all_games/{hyp}.pickle', mode='rb') as f:
     data3 = pickle.load(f)
 
 col1, col2 = st.columns(2)
 ag_col = {"DrQ_eps": col1, "DER": col2}
-
 
 col1.subheader('DrQ Epsilon')
 
@@ -63,9 +63,26 @@ for ag in agents:
         continue
     fig = plot(data[f'{ag}_{hyp}'])
     ag_col[ag].pyplot(fig)
+    
+    save_dir = f"figures/{shim}/IQM/{hyperparameter}"
+    if not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
+    fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+
     if data2 is not None:
         fig2 = plot_human_normalized(data2[f'{ag}_{hyp}'])
         ag_col[ag].pyplot(fig2)
+    
+        save_dir = f"figures/{shim}/HNS/{hyperparameter}"
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
+        fig2.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
 
     fig3 = plot_all_games(data3[f'{ag}_{hyp}'])
     ag_col[ag].pyplot(fig3)
+
+    save_dir = f"figures/{shim}/all_games/{hyperparameter}"
+    if not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
+    fig3.savefig(f"{save_dir}/{ag}.png")
+
