@@ -63,26 +63,12 @@ for ag in agents:
         continue
     fig = plot(data[f'{ag}_{hyp}'])
     ag_col[ag].pyplot(fig)
-    
-    save_dir = f"figures/{shim}/IQM/{hyperparameter}"
-    if not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
-    fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+
 
     if data2 is not None:
         fig2 = plot_human_normalized(data2[f'{ag}_{hyp}'])
         ag_col[ag].pyplot(fig2)
     
-        save_dir = f"figures/{shim}/HNS/{hyperparameter}"
-        if not os.path.isdir(save_dir):
-            os.makedirs(save_dir)
-        fig2.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
 
     fig3 = plot_all_games(data3[f'{ag}_{hyp}'])
     ag_col[ag].pyplot(fig3)
-
-    save_dir = f"figures/{shim}/all_games/{hyperparameter}"
-    if not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
-    fig3.savefig(f"{save_dir}/{ag}.png")
-
