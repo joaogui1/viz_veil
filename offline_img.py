@@ -27,7 +27,8 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
-    if hyp in ["gammas", "layer_funct", "convs_normalization"]:
+    if hyp in ["gammas", "layer_funct", "convs_normalization",
+                  "min_replay_history", "num_atoms", "update_horizon"]:
         shims = ["100k_experiments", "40M_experiments"]
     else:
         shims = ["100k_experiments"]

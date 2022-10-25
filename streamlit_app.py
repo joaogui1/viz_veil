@@ -1,7 +1,5 @@
 import streamlit as st
 
-import os
-import pickle
 import PIL
 PIL.Image.MAX_IMAGE_PIXELS = 900000000
 
