@@ -46,12 +46,10 @@ for hyperparameter, hyp in experiments_mapping.items():
 
         fig = split_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
         
-        # save_dir = f"figures/{shim}/HNS/{hyperparameter}"
-        # if not os.path.isdir(save_dir):
-        #     os.makedirs(save_dir)
-        # fig2.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
-
+        save_dir = f"figures/split/HNS/{hyperparameter}"
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
+        fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
 
         plt.close()
-        exit(0)
 

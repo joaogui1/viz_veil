@@ -243,4 +243,4 @@ def split_plot(dict_100k, dict_40M):
     ax.spines['left'].set_linestyle('-.')
 
   fig.subplots_adjust(wspace=0.0)
-  plt.show()
+  return fig
