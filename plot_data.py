@@ -126,38 +126,38 @@ zaxxon 9173.30 32.50 249808.90 ± 58261.59 370649.03 ± 19761.32 725853.90"""
 human_scores = my_str.split('\n')
 
 
-def plot_human_normalized(all_experiments, scale='100k'):
+def plot_human_normalized(all_experiments, scale='100k', ax=None, colors=None):
+  all_experiments = {k.split("_")[-1]:v for (k, v) in all_experiments.items()}
   algorithms = list(all_experiments.keys())
-  colors = sns.color_palette('colorblind')
-  colors_2 = sns.color_palette("pastel")
-  colors.extend(colors_2)
-  color_dict = dict(zip(algorithms, colors))
+  # colors = sns.color_palette('colorblind')
+  # colors_2 = sns.color_palette("pastel")
+  # colors.extend(colors_2)
 
   print('algorithms:', algorithms)
-  # Load ALE scores as a dictionary mapping algorithms to their human normalized
-  # score matrices across all 200 million frames, each of which is of size
-  # `(num_runs x num_games x 200)` where scores are recorded every million frame.
-  ale_all_frames_scores_dict = all_experiments
+  
   if scale == '100k':
     frames = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) - 1
   if scale == '40M':
     frames = np.array([1, 5, 10, 15, 20, 25, 30, 35, 40]) - 1
-  ale_frames_scores_dict = {algorithm: score[:, :, frames] for algorithm, score
-                            in ale_all_frames_scores_dict.items()}
+  all_experiments = {algorithm: score[:, :, frames] for algorithm, score
+                            in all_experiments.items()}
   iqm = lambda scores: np.array([metrics.aggregate_iqm(scores[..., frame])
                                 for frame in range(scores.shape[-1])])
-  iqm_scores, iqm_cis = rly.get_interval_estimates(ale_frames_scores_dict, iqm, reps=2000)
+  iqm_scores, iqm_cis = rly.get_interval_estimates(all_experiments, iqm, reps=2000)
 
-  #fig, ax = plt.subplots(figsize=(7, 4.5))
-  fig, ax = plt.subplots(figsize=(10, 8))
-  plot_utils.plot_sample_efficiency_curve(
+  if ax is None:
+    fig, ax = plt.subplots(figsize=(10, 8))
+  else:
+    fig = None
+  ax = plot_utils.plot_sample_efficiency_curve(
       frames+1, iqm_scores, iqm_cis, 
       algorithms=algorithms,
-      xlabel=r'Number of Frames (in thousands)',
+      xlabel=f'Number of Frames (in {"thousands" if scale == "100k" else "millions"})',
       ylabel='IQM Human Normalized Score',
+      colors=colors,
       legend=True,
       ax=ax)
-  return fig
+  return fig, ax
 
 
 def plot_all_games(df):
@@ -218,3 +218,29 @@ def plot_game(agent, env):
         col = 0
         row += 1
   return fig
+
+
+def split_plot(dict_100k, dict_40M):
+  fig, all_axes = plt.subplots(ncols=2, nrows=1, sharey=True,
+                              gridspec_kw={'width_ratios':[1, 2]},
+                              figsize=(14, 6))
+
+  algorithms = [k.split("_")[-1] for k in dict_100k.keys()]
+  colors = zip(algorithms, sns.color_palette("pastel"))
+  colors = {k:v for (k, v) in colors}
+  _, all_axes[0] = plot_human_normalized(dict_100k, scale="100k", ax=all_axes[0], colors=colors)
+
+  axes = all_axes[1:]
+  
+  _, all_axes[1] = plot_human_normalized(dict_40M, scale="40M", ax=all_axes[1], colors=colors)
+  
+  all_axes[0].legend(loc='upper left', prop={'size': 'large'})
+
+  for ax in axes:
+    ax.set_ylabel('')
+    plot_utils._decorate_axis(ax, hrect=-4, ticklabelsize='xx-large')
+    ax.spines['left'].set_linewidth(3)
+    ax.spines['left'].set_linestyle('-.')
+
+  fig.subplots_adjust(wspace=0.0)
+  plt.show()

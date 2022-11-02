@@ -27,11 +27,11 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
-    if hyp in ["gammas", "layer_funct", "convs_normalization",
-                  "min_replay_history", "num_atoms", "update_horizon"]:
-        shims = ["100k_experiments", "40M_experiments"]
-    else:
-        shims = ["100k_experiments"]
+    # if hyp in ["gammas", "layer_funct", "convs_normalization",
+    #               "min_replay_history", "num_atoms", "update_horizon"]:
+    #     shims = ["100k_experiments", "40M_experiments"]
+    # else:
+    shims = ["100k_experiments"]
     
     for shim in shims:
         with open(f'data/{shim}/final_perf/{hyp}.pickle', mode='rb') as f:
@@ -58,7 +58,7 @@ for hyperparameter, hyp in experiments_mapping.items():
             fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
 
             if data2 is not None:
-                fig2 = plot_human_normalized(data2[f'{ag}_{hyp}'], scale=shim.split('_')[0])
+                fig2, _ = plot_human_normalized(data2[f'{ag}_{hyp}'], scale=shim.split('_')[0])
             
                 save_dir = f"figures/{shim}/HNS/{hyperparameter}"
                 if not os.path.isdir(save_dir):
