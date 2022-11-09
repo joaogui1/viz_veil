@@ -35,16 +35,18 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
-# if hyp in ["gammas", "layer_funct", "convs_normalization"]:
-#     shim = "40M_experiments"
-# else:
-shim = "100k_experiments"
+if hyp in ["gammas", "layer_funct", "convs_normalization", "min_replay_history", "num_atoms", "update_horizon"]:
+    shim = "40M_experiments"
+    shim2 = "split"
+else:
+    shim = "100k_experiments"
+    shim2 = "100k_experiments"
 
 fig1_path = f"figures/{shim}/IQM/{hyperparameter}"
 # with open(f'data/{shim}/final_perf/{hyp}.pickle', mode='rb') as f:
     # data = pickle.load(f)
 
-fig2_path = f"figures/{shim}/HNS/{hyperparameter}"
+fig2_path = f"figures/{shim2}/HNS/{hyperparameter}"
 # try:
 #     with open(f'data/{shim}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
 #         data2 = pickle.load(f)
@@ -54,7 +56,7 @@ fig2_path = f"figures/{shim}/HNS/{hyperparameter}"
 # with open(f'data/{shim}/curves_all_games/{hyp}.pickle', mode='rb') as f:
 #     data3 = pickle.load(f)
 
-fig3_path = f"figures/{shim}/all_games/{hyperparameter}"
+# fig3_path = f"figures/{shim}/all_games/{hyperparameter}"
 
 col1, col2 = st.columns(2)
 ag_col = {"DrQ_eps": col1, "DER": col2}
@@ -82,5 +84,5 @@ for ag in agents:
 
     # fig3 = plot_all_games(data3[f'{ag}_{hyp}'])
     # ag_col[ag].pyplot(fig3)
-    ag_col[ag].image(fig3_path+f"/{ag}.png")
+    # ag_col[ag].image(fig3_path+f"/{ag}.png")
 
