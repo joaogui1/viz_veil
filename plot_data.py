@@ -3,6 +3,8 @@ import pickle
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid.inset_locator import (inset_axes, InsetPosition,
+                                                  mark_inset)
 import seaborn as sns
 
 from rliable import library as rly
@@ -241,6 +243,35 @@ def split_plot(dict_100k, dict_40M):
     plot_utils._decorate_axis(ax, hrect=-4, ticklabelsize='xx-large')
     ax.spines['left'].set_linewidth(3)
     ax.spines['left'].set_linestyle('-.')
+
+  fig.subplots_adjust(wspace=0.0)
+  return fig
+
+
+def inset_plot(dict_100k, dict_40M):
+  fig, ax = plt.subplots(figsize=(14, 6))
+
+  ax2 = ax.inset_axes([0.1, 0.7, 0.55/2, 0.5/2])
+
+  # ax2 = plt.axes([0, 0, 1, 1])
+  # ip = InsetPosition(ax, [0.1, 0.7, 0.55/2, 0.5/2])  # Second parameter is [xpos, ypos, width, height]
+  # ax2.set_axes_locator(ip)
+  mark_inset(ax, ax2, loc1=2, loc2=4, fc='none', ec='0.5')
+
+  algorithms = [k.split("_")[-1] for k in dict_100k.keys()]
+  colors = zip(algorithms, sns.color_palette("pastel"))
+  colors = {k:v for (k, v) in colors}
+  
+  _, ax2 = plot_human_normalized(dict_100k, scale="100k", ax=ax2, colors=colors)
+
+  # ax2.set_xlim(0, 10)
+  # ax2.set_ylim(0.0, 1.0)
+
+  _, ax = plot_human_normalized(dict_40M, scale="40M", ax=ax, colors=colors)
+  
+  ax2.set_ylabel('')
+  ax.get_legend().remove()
+  plot_utils._decorate_axis(ax, hrect=-4, ticklabelsize='xx-large')
 
   fig.subplots_adjust(wspace=0.0)
   return fig

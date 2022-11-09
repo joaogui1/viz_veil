@@ -2,7 +2,7 @@ import os
 import pickle
 
 import matplotlib.pyplot as plt
-from plot_data import split_plot
+from plot_data import inset_plot, split_plot
 
 agents = ["DrQ_eps", "DER"]
 
@@ -44,12 +44,13 @@ for hyperparameter, hyp in experiments_mapping.items():
         if ag == "DrQ_eps" and hyp == "num_atoms":
             continue
 
-        fig = split_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
-        
-        save_dir = f"figures/split/HNS/{hyperparameter}"
-        if not os.path.isdir(save_dir):
-            os.makedirs(save_dir)
-        fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+        fig = inset_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
+        plt.show()
+        # save_dir = f"figures/split/HNS/{hyperparameter}"
+        # if not os.path.isdir(save_dir):
+        #     os.makedirs(save_dir)
+        # fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
 
         plt.close()
+        exit(0)
 
