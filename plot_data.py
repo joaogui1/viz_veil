@@ -32,35 +32,22 @@ def decorate_axis(ax, wrect=10, hrect=10, labelsize='large'):
   ax.spines['left'].set_position(('outward', hrect))
   ax.spines['bottom'].set_position(('outward', wrect))
 
-def plot(all_experiments):
-  StratifiedBootstrap = rly.StratifiedBootstrap
-
+def plot(all_experiments, colors=None, hp_values=None):
   IQM = lambda x: metrics.aggregate_iqm(x) # Interquartile Mean
   OG = lambda x: metrics.aggregate_optimality_gap(x, 1.0) # Optimality Gap
   MEAN = lambda x: metrics.aggregate_mean(x)
   MEDIAN = lambda x: metrics.aggregate_median(x)
 
-  colors = sns.color_palette('colorblind')
-  colors_2 = sns.color_palette("pastel")
-  colors.extend(colors_2)  
-  xlabels = list(all_experiments.keys())
-
-
-  color_idxs = list(np.arange(len(xlabels)))
-  ATARI_100K_COLOR_DICT = dict(zip(xlabels, [colors[idx] for idx in color_idxs]))
-  atari_100k_score_dict = {key: val[:10] for key, val in all_experiments.items()}
-
   aggregate_func = lambda x: np.array([MEDIAN(x), IQM(x), MEAN(x), OG(x)])
   aggregate_scores, aggregate_interval_estimates = rly.get_interval_estimates(
       all_experiments, aggregate_func, reps=50000)
 
-  algorithms = list(all_experiments.keys())
-  fig, axes = plot_utils.plot_interval_estimates(
+  fig, _ = plot_utils.plot_interval_estimates(
       aggregate_scores, 
       aggregate_interval_estimates,
       metric_names = ['Median', 'IQM', 'Mean', 'Optimality Gap'],
-      algorithms=algorithms,
-      colors=ATARI_100K_COLOR_DICT,
+      algorithms=hp_values,
+      colors=colors,
       xlabel_y_coordinate=-0.8,
       xlabel='Human Normalized Score')
   return fig
@@ -131,9 +118,6 @@ human_scores = my_str.split('\n')
 def plot_human_normalized(all_experiments, scale='100k', ax=None, colors=None):
   all_experiments = {k.split("_")[-1]:v for (k, v) in all_experiments.items()}
   algorithms = list(all_experiments.keys())
-  # colors = sns.color_palette('colorblind')
-  # colors_2 = sns.color_palette("pastel")
-  # colors.extend(colors_2)
 
   print('algorithms:', algorithms)
   

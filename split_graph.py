@@ -44,7 +44,7 @@ for hyperparameter, hyp in experiments_mapping.items():
         if ag == "DrQ_eps" and hyp == "num_atoms":
             continue
 
-        fig = inset_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
+        fig = split_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
         plt.show()
         # save_dir = f"figures/split/HNS/{hyperparameter}"
         # if not os.path.isdir(save_dir):
