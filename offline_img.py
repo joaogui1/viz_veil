@@ -36,38 +36,38 @@ for hyperparameter, hyp in experiments_mapping.items():
     #     shim2 = "100k_experiments"
 
     shims = ["100k_experiments", "40M_experiments"]
-    
-    for shim in shims:
-        colors = None
-        try:
-            with open(f'data/{shim}/final_perf/{hyp}.pickle', mode='rb') as f:
-                data = pickle.load(f)
-        except:
-            data = None
+    colors = None
+    for ag in agents:
 
-        try:
-            with open(f'data/{shim}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
-                data2 = pickle.load(f)
+        for shim in shims:
+            try:
+                with open(f'data/{shim}/final_perf/{hyp}.pickle', mode='rb') as f:
+                    data = pickle.load(f)
+            except:
+                data = None
 
-        except:
-            data2 = None
+            try:
+                with open(f'data/{shim}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
+                    data2 = pickle.load(f)
+
+            except:
+                data2 = None
 
         # with open(f'data/{shim}/curves_all_games/{hyp}.pickle', mode='rb') as f:
         #     data3 = pickle.load(f)
 
 
-        for ag in agents:
+        
             if ag == "DrQ_eps" and hyp == "num_atoms":
                 continue
             if data is not None:
-                print(f"working!\n{ag} and {hyp}\n")
                 data[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data[f'{ag}_{hyp}'].items()}
                 if "normalization" in data[f'{ag}_{hyp}'].keys():
                     data[f'{ag}_{hyp}']["No Normalization"] = data[f'{ag}_{hyp}'].pop("normalization")
                 hp_values = list(data[f'{ag}_{hyp}'].keys())
-
-                colors = zip(hp_values, sns.color_palette("pastel"))
-                colors = {k:v for (k, v) in colors}
+                if colors is None:
+                    colors = zip(hp_values, sns.color_palette("pastel"))
+                    colors = {k:v for (k, v) in colors}
 
                 fig = plot(data[f'{ag}_{hyp}'], colors, hp_values)
                 
@@ -88,6 +88,7 @@ for hyperparameter, hyp in experiments_mapping.items():
                 if not os.path.isdir(save_dir):
                     os.makedirs(save_dir)
                 fig2.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+                
 
             # fig3 = plot_all_games(data3[f'{ag}_{hyp}'])
 

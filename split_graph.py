@@ -47,6 +47,7 @@ for hyperparameter, hyp in experiments_mapping.items():
         data40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data40M[f'{ag}_{hyp}'].items()}
         fig = split_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
         # plt.show()
+        
         save_dir = f"figures/split/HNS/{hyperparameter}"
         if not os.path.isdir(save_dir):
             os.makedirs(save_dir)
