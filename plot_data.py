@@ -117,6 +117,8 @@ human_scores = my_str.split('\n')
 
 def plot_human_normalized(all_experiments, scale='100k', ax=None, colors=None):
   all_experiments = {k.split("_")[-1]:v for (k, v) in all_experiments.items()}
+  if "normalization" in all_experiments.keys():
+    all_experiments["No Normalization"] = all_experiments.pop("normalization")
   algorithms = list(all_experiments.keys())
 
   print('algorithms:', algorithms)
@@ -211,9 +213,13 @@ def split_plot(dict_100k, dict_40M):
                               gridspec_kw={'width_ratios':[1, 2]},
                               figsize=(14, 6))
 
-  algorithms = [k.split("_")[-1] for k in dict_100k.keys()]
+  if "normalization" in dict_100k.keys():
+    dict_100k["No Normalization"] = dict_100k.pop("normalization")
+    dict_40M["No Normalization"] = dict_40M.pop("normalization")
+  algorithms = list(dict_100k.keys())
   colors = zip(algorithms, sns.color_palette("pastel"))
   colors = {k:v for (k, v) in colors}
+  
   _, all_axes[0] = plot_human_normalized(dict_100k, scale="100k", ax=all_axes[0], colors=colors)
 
   axes = all_axes[1:]

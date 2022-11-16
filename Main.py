@@ -9,31 +9,31 @@ plot = st.experimental_memo(plot)
 plot_human_normalized = st.experimental_memo(plot_human_normalized)
 
 st.set_page_config(layout="wide", page_title="Lifting the Veil")
-st.sidebar.markdown("# Main page 🎈")
+st.sidebar.markdown("# Main page 🌈")
 
 st.title("Lifting the Veil")
 # text = st.text_input()
 # agents = st.multiselect("Agents", options=["DrQ_eps", "DER"])
 agents = ["DrQ_eps", "DER"]
 
-experiments_mapping = { "Activation Function": "layer_funct",
-                        "Adam's epsilon": "epsilon",
-                        "Batch Size": "batch_sizes",
-                        "Convolutional Normalization": "convs_normalization", 
-                        "Dense Normalization": "normalizations",
-                        "Discount Factor": "gammas",
-                        "Learning Rate": "learning_rate",
-                        "Minimum Replay History": "min_replay_history",
-                        "Number of Atoms": "num_atoms", 
-                        "Number of Convolutional Layers": "convs", 
-                        "Number of Dense Layers": "depths",
-                        "Replay Capacity": "replay_capacity",
-                        "Reward Clipping": "clip_rewards",
-                        "Target Update Period": "target_update_periods",
-                        "Update Horizon": "update_horizon",
-                        "Update Period": "update_periods",
-                        "Weight Decay": "weightdecay",
-                        "Width": "widths",
+experiments_mapping = { "Activation Function (40M)": "layer_funct",
+                        "Adam's epsilon (100k)": "epsilon",
+                        "Batch Size (100k)": "batch_sizes",
+                        "Convolutional Normalization (40M)": "convs_normalization", 
+                        "Dense Normalization (100k)": "normalizations",
+                        "Discount Factor (40M)": "gammas",
+                        "Learning Rate (100k)": "learning_rate",
+                        "Minimum Replay History (40M)": "min_replay_history",
+                        "Number of Atoms (40M)": "num_atoms", 
+                        "Number of Convolutional Layers (100k)": "convs", 
+                        "Number of Dense Layers (100k)": "depths",
+                        "Replay Capacity (100k)": "replay_capacity",
+                        "Reward Clipping (100k)": "clip_rewards",
+                        "Target Update Period (100k)": "target_update_periods",
+                        "Update Horizon (40M)": "update_horizon",
+                        "Update Period (100k)": "update_periods",
+                        "Weight Decay (100k)": "weightdecay",
+                        "Width (100k)": "widths",
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
@@ -44,11 +44,13 @@ else:
     shim = "100k_experiments"
     shim2 = "100k_experiments"
 
-fig1_path = f"figures/{shim}/IQM/{hyperparameter}"
+st.header(hyperparameter)
+
+fig1_path = f"figures/{shim}/IQM/{hyperparameter.split('(')[0][:-1]}"
 # with open(f'data/{shim}/final_perf/{hyp}.pickle', mode='rb') as f:
     # data = pickle.load(f)
 
-fig2_path = f"figures/{shim2}/HNS/{hyperparameter}"
+fig2_path = f"figures/{shim2}/HNS/{hyperparameter.split('(')[0][:-1]}"
 # try:
 #     with open(f'data/{shim}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
 #         data2 = pickle.load(f)

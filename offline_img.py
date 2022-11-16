@@ -62,6 +62,8 @@ for hyperparameter, hyp in experiments_mapping.items():
             if data is not None:
                 print(f"working!\n{ag} and {hyp}\n")
                 data[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data[f'{ag}_{hyp}'].items()}
+                if "normalization" in data[f'{ag}_{hyp}'].keys():
+                    data[f'{ag}_{hyp}']["No Normalization"] = data[f'{ag}_{hyp}'].pop("normalization")
                 hp_values = list(data[f'{ag}_{hyp}'].keys())
 
                 colors = zip(hp_values, sns.color_palette("pastel"))

@@ -43,14 +43,14 @@ for hyperparameter, hyp in experiments_mapping.items():
     for ag in agents:
         if ag == "DrQ_eps" and hyp == "num_atoms":
             continue
-
+        data100k[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data100k[f'{ag}_{hyp}'].items()}
+        data40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data40M[f'{ag}_{hyp}'].items()}
         fig = split_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
-        plt.show()
-        # save_dir = f"figures/split/HNS/{hyperparameter}"
-        # if not os.path.isdir(save_dir):
-        #     os.makedirs(save_dir)
-        # fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+        # plt.show()
+        save_dir = f"figures/split/HNS/{hyperparameter}"
+        if not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
+        fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
 
         plt.close()
-        exit(0)
 
