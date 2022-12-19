@@ -28,13 +28,6 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
-    # if hyp in ["gammas", "layer_funct", "convs_normalization", "min_replay_history", "num_atoms", "update_horizon"]:
-    #     shim = "40M_experiments"
-    #     shim2 = "split"
-    # else:
-    #     shim = "100k_experiments"
-    #     shim2 = "100k_experiments"
-
     shims = ["100k_experiments", "40M_experiments"]
     colors = None
     for ag in agents:
@@ -53,11 +46,6 @@ for hyperparameter, hyp in experiments_mapping.items():
             except:
                 data2 = None
 
-        # with open(f'data/{shim}/curves_all_games/{hyp}.pickle', mode='rb') as f:
-        #     data3 = pickle.load(f)
-
-
-        
             if ag == "DrQ_eps" and hyp == "num_atoms":
                 continue
             if data is not None:
@@ -88,13 +76,6 @@ for hyperparameter, hyp in experiments_mapping.items():
                 if not os.path.isdir(save_dir):
                     os.makedirs(save_dir)
                 fig2.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
-                
 
-            # fig3 = plot_all_games(data3[f'{ag}_{hyp}'])
-
-            # save_dir = f"figures/{shim}/all_games/{hyperparameter}"
-            # if not os.path.isdir(save_dir):
-            #     os.makedirs(save_dir)
-            # fig3.savefig(f"{save_dir}/{ag}.png")
             plt.close()
 

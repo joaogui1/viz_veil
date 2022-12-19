@@ -48,7 +48,7 @@ def plot(all_experiments, colors=None, hp_values=None):
       metric_names = ['Median', 'IQM', 'Mean', 'Optimality Gap'],
       algorithms=hp_values,
       colors=colors,
-      xlabel_y_coordinate=-0.8,
+      xlabel_y_coordinate=-0.3,
       xlabel='Human Normalized Score')
   return fig
 
@@ -216,7 +216,7 @@ def split_plot(dict_100k, dict_40M):
   if "normalization" in dict_100k.keys():
     dict_100k["No Normalization"] = dict_100k.pop("normalization")
     dict_40M["No Normalization"] = dict_40M.pop("normalization")
-  algorithms = list(dict_100k.keys())
+  algorithms = list(set(dict_100k.keys()) | set(dict_40M.keys()))
   colors = zip(algorithms, sns.color_palette("pastel"))
   colors = {k:v for (k, v) in colors}
   

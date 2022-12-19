@@ -27,11 +27,13 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
-    if hyp in ["gammas", "layer_funct", "convs_normalization",
-                  "min_replay_history", "num_atoms", "update_horizon"]:
-        shims = ["100k_experiments", "40M_experiments"]
-    else:
+    if hyp in ["convs", "replay_capacity", "weightdecay", "clip_rewards", "update_periods", "widths"]:
         continue
+    # if hyp in ["gammas", "layer_funct", "convs_normalization",
+    #               "min_replay_history", "num_atoms", "update_horizon"]:
+    shims = ["100k_experiments", "40M_experiments"]
+    # else:
+    #     continue
     
     with open(f'data/{shims[0]}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
         data100k = pickle.load(f)

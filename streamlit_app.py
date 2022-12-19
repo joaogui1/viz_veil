@@ -17,19 +17,19 @@ st.title("Lifting the Veil")
 agents = ["DrQ_eps", "DER"]
 
 experiments_mapping = { "Activation Function (40M)": "layer_funct",
-                        "Adam's epsilon (100k)": "epsilon",
-                        "Batch Size (100k)": "batch_sizes",
+                        "Adam's epsilon (40M)": "epsilon",
+                        "Batch Size (40M)": "batch_sizes",
                         "Convolutional Normalization (40M)": "convs_normalization", 
-                        "Dense Normalization (100k)": "normalizations",
+                        "Dense Normalization (40M)": "normalizations",
                         "Discount Factor (40M)": "gammas",
-                        "Learning Rate (100k)": "learning_rate",
+                        "Learning Rate (40M)": "learning_rate",
                         "Minimum Replay History (40M)": "min_replay_history",
                         "Number of Atoms (40M)": "num_atoms", 
                         "Number of Convolutional Layers (100k)": "convs", 
-                        "Number of Dense Layers (100k)": "depths",
+                        "Number of Dense Layers (40M)": "depths",
                         "Replay Capacity (100k)": "replay_capacity",
                         "Reward Clipping (100k)": "clip_rewards",
-                        "Target Update Period (100k)": "target_update_periods",
+                        "Target Update Period (40M)": "target_update_periods",
                         "Update Horizon (40M)": "update_horizon",
                         "Update Period (100k)": "update_periods",
                         "Weight Decay (100k)": "weightdecay",
@@ -37,7 +37,7 @@ experiments_mapping = { "Activation Function (40M)": "layer_funct",
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
-if hyp in ["gammas", "layer_funct", "convs_normalization", "min_replay_history", "num_atoms", "update_horizon"]:
+if hyp not in ["convs", "replay_capacity", "weightdecay", "clip_rewards", "update_periods", "widths"]:
     shim = "40M_experiments"
     shim2 = "split"
 else:
@@ -74,7 +74,12 @@ for ag in agents:
         continue
     # fig = plot(data[f'{ag}_{hyp}'])
     # ag_col[ag].pyplot(fig)
-    ag_col[ag].image(fig1_path+f"/{ag}.png")
+    for shim in ["100k_experiments", "40M_experiments"]:
+        fig1_path = f"figures/{shim}/IQM/{hyperparameter.split('(')[0][:-1]}" 
+        try:
+            ag_col[ag].image(fig1_path+f"/{ag}.png")
+        except:
+            pass
 
 
     # if data2 is not None:
