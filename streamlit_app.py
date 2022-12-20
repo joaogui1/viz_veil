@@ -28,16 +28,16 @@ experiments_mapping = { "Activation Function (40M)": "layer_funct",
                         "Number of Convolutional Layers (100k)": "convs", 
                         "Number of Dense Layers (40M)": "depths",
                         "Replay Capacity (100k)": "replay_capacity",
-                        "Reward Clipping (100k)": "clip_rewards",
+                        "Reward Clipping (40M)": "clip_rewards",
                         "Target Update Period (40M)": "target_update_periods",
                         "Update Horizon (40M)": "update_horizon",
                         "Update Period (100k)": "update_periods",
                         "Weight Decay (100k)": "weightdecay",
-                        "Width (100k)": "widths",
+                        "Width (40M)": "widths",
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
-if hyp not in ["convs", "replay_capacity", "weightdecay", "clip_rewards", "update_periods", "widths"]:
+if hyp not in ["convs", "replay_capacity", "weightdecay", "update_periods"]:
     shim = "40M_experiments"
     shim2 = "split"
 else:
