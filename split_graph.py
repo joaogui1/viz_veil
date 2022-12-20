@@ -27,7 +27,7 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
-    if hyp in ["convs", "replay_capacity", "weightdecay", "clip_rewards", "update_periods", "widths"]:
+    if hyp in ["convs", "replay_capacity", "weightdecay", "update_periods"]:
         continue
     # if hyp in ["gammas", "layer_funct", "convs_normalization",
     #               "min_replay_history", "num_atoms", "update_horizon"]:
@@ -48,7 +48,7 @@ for hyperparameter, hyp in experiments_mapping.items():
         data100k[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data100k[f'{ag}_{hyp}'].items()}
         data40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data40M[f'{ag}_{hyp}'].items()}
         fig = split_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
-        # plt.show()
+        plt.xlabel("Number of Frames (in Millions)", x=0)
         
         save_dir = f"figures/split/HNS/{hyperparameter}"
         if not os.path.isdir(save_dir):

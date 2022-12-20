@@ -138,9 +138,10 @@ def plot_human_normalized(all_experiments, scale='100k', ax=None, colors=None):
   else:
     fig = None
   ax = plot_utils.plot_sample_efficiency_curve(
-      frames+1, iqm_scores, iqm_cis, 
+      0.01*(frames+1) if scale == "100k" else (frames + 1), 
+      iqm_scores, iqm_cis, 
       algorithms=algorithms,
-      xlabel=f'Number of Frames (in {"thousands" if scale == "100k" else "millions"})',
+      xlabel=f'',
       ylabel='IQM Human Normalized Score',
       colors=colors,
       legend=True,
