@@ -38,11 +38,12 @@ experiments_mapping = { "Activation Function (40M)": "layer_funct",
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
 if hyp == "replay_capacity":
-    shim = "40M_experiments"
-    shim2 = "split"
-else:
     shim = "100k_experiments"
     shim2 = "100k_experiments"
+else:
+    shim = "40M_experiments"
+    shim2 = "split"
+    
 
 st.header(hyperparameter)
 
