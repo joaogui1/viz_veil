@@ -27,7 +27,7 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
-    if hyp in ["convs", "replay_capacity", "weightdecay", "update_periods"]:
+    if hyp  == "replay_capacity":
         continue
     # if hyp in ["gammas", "layer_funct", "convs_normalization",
     #               "min_replay_history", "num_atoms", "update_horizon"]:
