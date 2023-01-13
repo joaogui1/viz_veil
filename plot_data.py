@@ -35,20 +35,18 @@ def decorate_axis(ax, wrect=10, hrect=10, labelsize='large'):
 def plot(all_experiments, colors=None, hp_values=None):
   IQM = lambda x: metrics.aggregate_iqm(x) # Interquartile Mean
   OG = lambda x: metrics.aggregate_optimality_gap(x, 1.0) # Optimality Gap
-  MEAN = lambda x: metrics.aggregate_mean(x)
-  MEDIAN = lambda x: metrics.aggregate_median(x)
 
-  aggregate_func = lambda x: np.array([MEDIAN(x), IQM(x), MEAN(x), OG(x)])
+  aggregate_func = lambda x: np.array([IQM(x), OG(x)])
   aggregate_scores, aggregate_interval_estimates = rly.get_interval_estimates(
       all_experiments, aggregate_func, reps=50000)
 
   fig, _ = plot_utils.plot_interval_estimates(
       aggregate_scores, 
       aggregate_interval_estimates,
-      metric_names = ['Median', 'IQM', 'Mean', 'Optimality Gap'],
+      metric_names = ['IQM', 'Optimality Gap'],
       algorithms=hp_values,
       colors=colors,
-      xlabel_y_coordinate=-0.3,
+      xlabel_y_coordinate=-0.1,
       xlabel='Human Normalized Score')
   return fig
 

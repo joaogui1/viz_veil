@@ -17,7 +17,7 @@ experiments_mapping = { "Activation Function": "layer_funct",
                         "Minimum Replay History": "min_replay_history",
                         "Number of Atoms": "num_atoms", 
                         "Number of Convolutional Layers": "convs", 
-                        # "Number of Dense Layers": "depths",
+                        "Number of Dense Layers": "depths",
                         "Replay Capacity": "replay_capacity",
                         "Reward Clipping": "clip_rewards",
                         "Target Update Period": "target_update_periods",
@@ -53,9 +53,8 @@ for hyperparameter, hyp in experiments_mapping.items():
                 if "normalization" in data[f'{ag}_{hyp}'].keys():
                     data[f'{ag}_{hyp}']["No Normalization"] = data[f'{ag}_{hyp}'].pop("normalization")
                 hp_values = list(data[f'{ag}_{hyp}'].keys())
-                if colors is None:
-                    colors = zip(hp_values, sns.color_palette("pastel"))
-                    colors = {k:v for (k, v) in colors}
+                colors = zip(hp_values, sns.color_palette("pastel"))
+                colors = {k:v for (k, v) in colors}
 
                 fig = plot(data[f'{ag}_{hyp}'], colors, hp_values)
                 
