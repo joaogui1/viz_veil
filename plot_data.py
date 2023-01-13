@@ -46,7 +46,7 @@ def plot(all_experiments, colors=None, hp_values=None):
       metric_names = ['IQM', 'Optimality Gap'],
       algorithms=hp_values,
       colors=colors,
-      xlabel_y_coordinate=-0.1,
+      xlabel_y_coordinate=-0.3,
       xlabel='Human Normalized Score')
   return fig
 
