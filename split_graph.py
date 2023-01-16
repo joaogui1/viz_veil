@@ -27,14 +27,8 @@ experiments_mapping = { "Activation Function": "layer_funct",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
-    if hyp  == "replay_capacity":
-        continue
-    # if hyp in ["gammas", "layer_funct", "convs_normalization",
-    #               "min_replay_history", "num_atoms", "update_horizon"]:
     shims = ["100k_experiments", "40M_experiments"]
-    # else:
-    #     continue
-    
+
     with open(f'data/{shims[0]}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
         data100k = pickle.load(f)
     
@@ -53,7 +47,7 @@ for hyperparameter, hyp in experiments_mapping.items():
         save_dir = f"figures/split/HNS/{hyperparameter}"
         if not os.path.isdir(save_dir):
             os.makedirs(save_dir)
-        fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+        fig.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
         plt.close()
 
