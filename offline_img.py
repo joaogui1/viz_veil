@@ -62,7 +62,7 @@ for hyperparameter, hyp in experiments_mapping.items():
                 save_dir = f"figures/{shim}/IQM/{hyperparameter}"
                 if not os.path.isdir(save_dir):
                     os.makedirs(save_dir)
-                fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+                fig.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
             if data2 is not None:
                 fig2, _ = plot_human_normalized(
@@ -74,7 +74,7 @@ for hyperparameter, hyp in experiments_mapping.items():
                 save_dir = f"figures/{shim}/HNS/{hyperparameter}"
                 if not os.path.isdir(save_dir):
                     os.makedirs(save_dir)
-                fig2.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+                fig2.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
             plt.close()
 
