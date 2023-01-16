@@ -237,26 +237,35 @@ def split_plot(dict_100k, dict_40M):
   return fig
 
 
-def inset_plot(dict_100k, dict_40M):
-  fig, ax = plt.subplots(figsize=(14, 6))
+def plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
+  IQM = lambda x: metrics.aggregate_iqm(x) # Interquartile Mean
 
-  ax2 = ax.inset_axes([0.1, 0.7, 0.55/2, 0.5/2])
-
-  # ax2 = plt.axes([0, 0, 1, 1])
-  # ip = InsetPosition(ax, [0.1, 0.7, 0.55/2, 0.5/2])  # Second parameter is [xpos, ypos, width, height]
-  # ax2.set_axes_locator(ip)
-  mark_inset(ax, ax2, loc1=2, loc2=4, fc='none', ec='0.5')
-
-  algorithms = [k.split("_")[-1] for k in dict_100k.keys()]
-  colors = zip(algorithms, sns.color_palette("pastel"))
-  colors = {k:v for (k, v) in colors}
+  algorithms = list(dict_100k.keys() | dict_40M.keys())
+  colors = dict(zip(algorithms, sns.color_palette("pastel")))
   
-  _, ax2 = plot_human_normalized(dict_100k, scale="100k", ax=ax2, colors=colors)
-  _, ax = plot_human_normalized(dict_40M, scale="40M", ax=ax, colors=colors)
-  
-  ax2.set_ylabel('')
-  ax.get_legend().remove()
-  plot_utils._decorate_axis(ax, hrect=-4, ticklabelsize='xx-large')
+  dict_100k = {k + "_100k":v for (k, v) in dict_100k.items()}
+  dict_40M = {k + "_40M":v for (k, v) in dict_40M.items()}
+  if "normalization" in dict_100k.keys():
+    dict_100k["No Normalization"] = dict_100k.pop("normalization")
+    dict_40M["No Normalization"] = dict_40M.pop("normalization")
 
-  fig.subplots_adjust(wspace=0.0)
+  all_experiments = {**dict_100k, **dict_40M}
+  hp_values = list(all_experiments.keys())
+  print("Interval plots:", hp_values)
+  colors = {**{k:colors[k.split("_100k")[0]] for k in dict_100k}, 
+            **{k:colors[k.split("_40M")[0]] for k in dict_40M}}
+
+  aggregate_func = lambda x: np.array([IQM(x)])
+  aggregate_scores, aggregate_interval_estimates = rly.get_interval_estimates(
+      all_experiments, aggregate_func, reps=50000)
+
+  fig, _ = plot_utils.plot_interval_estimates(
+      aggregate_scores, 
+      aggregate_interval_estimates,
+      metric_names = ['IQM'],
+      algorithms=hp_values,
+      colors=colors,
+      subfigure_width=5.0,
+      xlabel_y_coordinate=-0.1,
+      xlabel='Human Normalized Score')
   return fig
