@@ -2,7 +2,7 @@ import os
 import pickle
 
 import matplotlib.pyplot as plt
-from plot_data import inset_plot, split_plot
+from plot_data import split_plot
 
 agents = ["DrQ_eps", "DER"]
 
@@ -42,11 +42,12 @@ for hyperparameter, hyp in experiments_mapping.items():
         data100k[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data100k[f'{ag}_{hyp}'].items()}
         data40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data40M[f'{ag}_{hyp}'].items()}
         fig = split_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])
-        plt.xlabel("Number of Frames (in Millions)", x=0)
+        plt.xlabel("Number of Frames (in Millions)", x=0.2)
         
         save_dir = f"figures/split/HNS/{hyperparameter}"
         if not os.path.isdir(save_dir):
             os.makedirs(save_dir)
+        fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
         fig.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
         plt.close()

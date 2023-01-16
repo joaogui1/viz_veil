@@ -252,10 +252,6 @@ def inset_plot(dict_100k, dict_40M):
   colors = {k:v for (k, v) in colors}
   
   _, ax2 = plot_human_normalized(dict_100k, scale="100k", ax=ax2, colors=colors)
-
-  # ax2.set_xlim(0, 10)
-  # ax2.set_ylim(0.0, 1.0)
-
   _, ax = plot_human_normalized(dict_40M, scale="40M", ax=ax, colors=colors)
   
   ax2.set_ylabel('')
