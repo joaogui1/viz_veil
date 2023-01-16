@@ -219,19 +219,17 @@ def split_plot(dict_100k, dict_40M):
   colors = zip(algorithms, sns.color_palette("pastel"))
   colors = {k:v for (k, v) in colors}
   
-  _, all_axes[0] = plot_human_normalized(dict_100k, scale="100k", ax=all_axes[0], colors=colors)
-
-  axes = all_axes[1:]
-  
+  _, all_axes[0] = plot_human_normalized(dict_100k, scale="100k", ax=all_axes[0], colors=colors) 
+  # import pdb; pdb.set_trace()
   _, all_axes[1] = plot_human_normalized(dict_40M, scale="40M", ax=all_axes[1], colors=colors)
   
-  all_axes[0].legend(loc='upper left', prop={'size': 'large'})
+  all_axes[0].legend(loc='upper left', prop={'size': 'large'}).texts[0].set_fontweight('bold')
 
-  for ax in axes:
-    ax.set_ylabel('')
-    plot_utils._decorate_axis(ax, hrect=-4, ticklabelsize='xx-large')
-    ax.spines['left'].set_linewidth(3)
-    ax.spines['left'].set_linestyle('-.')
+  all_axes[1].set_ylabel('')
+  plot_utils._decorate_axis(all_axes[1], hrect=-4, ticklabelsize='xx-large')
+  all_axes[1].legend().texts[0].set_fontweight('bold')
+  all_axes[1].spines['left'].set_linewidth(3)
+  all_axes[1].spines['left'].set_linestyle('-.')
 
   fig.subplots_adjust(wspace=0.0)
   return fig
