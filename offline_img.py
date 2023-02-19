@@ -10,7 +10,7 @@ agents = ["DrQ_eps", "DER"]
 experiments_mapping = { "Activation Function": "layer_funct",
                         "Adam's epsilon": "epsilon",
                         "Batch Size": "batch_sizes",
-                        "Convolutional Normalization": "convs_normalization", 
+                        # "Convolutional Normalization": "convs_normalization", 
                         "Dense Normalization": "normalizations",
                         "Discount Factor": "gammas",
                         "Learning Rate": "learning_rate",
@@ -48,6 +48,7 @@ for hyperparameter, hyp in experiments_mapping.items():
 
             if ag == "DrQ_eps" and hyp == "num_atoms":
                 continue
+
             if data is not None:
                 data[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data[f'{ag}_{hyp}'].items()}
                 if "normalization" in data[f'{ag}_{hyp}'].keys():
@@ -65,12 +66,17 @@ for hyperparameter, hyp in experiments_mapping.items():
                 fig.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
             if data2 is not None:
+                data2[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data2[f'{ag}_{hyp}'].items()}
+                if "normalization" in data2[f'{ag}_{hyp}'].keys():
+                    data2[f'{ag}_{hyp}']["No Normalization"] = data2[f'{ag}_{hyp}'].pop("normalization")
+                hp_values = list(data2[f'{ag}_{hyp}'].keys())
+                colors = zip(hp_values, sns.color_palette("pastel"))
+                colors = {k:v for (k, v) in colors}
                 fig2, _ = plot_human_normalized(
                                                 data2[f'{ag}_{hyp}'],
                                                 scale=shim.split('_')[0],
                                                 colors=colors
-                                                )
-            
+                                                ) 
                 save_dir = f"figures/{shim}/HNS/{hyperparameter}"
                 if not os.path.isdir(save_dir):
                     os.makedirs(save_dir)
