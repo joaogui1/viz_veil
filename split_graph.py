@@ -6,24 +6,24 @@ from plot_data import plot_iqm, split_plot
 
 agents = ["DrQ_eps", "DER"]
 
-experiments_mapping = { "Activation Function": "layer_funct",
-                        # "Adam's epsilon": "epsilon",
-                        # "Batch Size": "batch_sizes",
+experiments_mapping = { "Activation Function": "layer_funct_conv",
+                        "Adam's epsilon": "epsilon",
+                        "Batch Size": "batch_sizes",
                         # "Convolutional Normalization": "convs_normalization", 
-                        # # "Dense Normalization": "normalizations",
-                        # "Discount Factor": "gammas",
-                        # "Learning Rate": "learning_rate",
+                        "Dense Normalization": "normalizations",
+                        "Discount Factor": "gammas",
+                        "Learning Rate": "learning_rate",
                         # "Minimum Replay History": "min_replay_history",
-                        # "Number of Atoms": "num_atoms", 
-                        # "Number of Convolutional Layers": "convs", 
-                        # "Number of Dense Layers": "depths",
-                        # # "Replay Capacity": "replay_capacity",
-                        # "Reward Clipping": "clip_rewards",
-                        # "Target Update Period": "target_update_periods",
-                        # "Update Horizon": "update_horizon",
-                        # "Update Period": "update_periods",
+                        "Number of Atoms": "num_atoms", 
+                        "Number of Convolutional Layers": "convs", 
+                        "Number of Dense Layers": "depths",
+                        # "Replay Capacity": "replay_capacity",
+                        "Reward Clipping": "clip_rewards",
+                        "Target Update Period": "target_update_periods",
+                        "Update Horizon": "update_horizon",
+                        "Update Period": "update_periods",
                         # "Weight Decay": "weightdecay",
-                        # "Width": "widths",
+                        "Width": "widths",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
@@ -35,11 +35,11 @@ for hyperparameter, hyp in experiments_mapping.items():
     with open(f'data/{shims[1]}/human_normalized_curve/{hyp}.pickle', mode='rb') as f:
         data40M = pickle.load(f)
     
-    with open(f'data/{shims[0]}/final_perf/{hyp}.pickle', mode='rb') as f:
-        final_perf_100k = pickle.load(f)
+    # with open(f'data/{shims[0]}/final_perf/{hyp}.pickle', mode='rb') as f:
+    #     final_perf_100k = pickle.load(f)
     
-    with open(f'data/{shims[1]}/final_perf/{hyp}.pickle', mode='rb') as f:
-        final_perf_40M = pickle.load(f)
+    # with open(f'data/{shims[1]}/final_perf/{hyp}.pickle', mode='rb') as f:
+    #     final_perf_40M = pickle.load(f)
 
 
     for ag in agents:
@@ -55,17 +55,16 @@ for hyperparameter, hyp in experiments_mapping.items():
             os.makedirs(save_dir)
         fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
         fig.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
-        plt.show()
 
-        final_perf_100k[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in final_perf_100k[f'{ag}_{hyp}'].items()}
-        final_perf_40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in final_perf_40M[f'{ag}_{hyp}'].items()}
-        fig_iqm = plot_iqm(final_perf_100k[f'{ag}_{hyp}'], final_perf_40M[f'{ag}_{hyp}'])
+        # final_perf_100k[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in final_perf_100k[f'{ag}_{hyp}'].items()}
+        # final_perf_40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in final_perf_40M[f'{ag}_{hyp}'].items()}
+        # fig_iqm = plot_iqm(final_perf_100k[f'{ag}_{hyp}'], final_perf_40M[f'{ag}_{hyp}'])
         
-        save_dir = f"figures/split/IQM/{hyperparameter}"
-        if not os.path.isdir(save_dir):
-            os.makedirs(save_dir)
-        fig_iqm.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
-        fig_iqm.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
+        # save_dir = f"figures/split/IQM/{hyperparameter}"
+        # if not os.path.isdir(save_dir):
+        #     os.makedirs(save_dir)
+        # fig_iqm.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+        # fig_iqm.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
         plt.close()
 
