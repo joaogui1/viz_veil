@@ -16,24 +16,26 @@ st.title("Lifting the Veil")
 # agents = st.multiselect("Agents", options=["DrQ_eps", "DER"])
 agents = ["DrQ_eps", "DER"]
 
-experiments_mapping = { "Activation Function": "layer_funct",
+experiments_mapping = { 
                         "Adam's epsilon": "epsilon",
                         "Batch Size": "batch_sizes",
-                        "Convolutional Normalization": "convs_normalization", 
+                        "Conv. Activation Function": "layer_funct_conv",
+                        "Convolutional Normalization": "normalizations_convs", 
+                        "Convolutional Width": "CNN_widths",
                         "Dense Normalization": "normalizations",
+                        "Dense Width": "widths",
                         "Discount Factor": "gammas",
                         "Learning Rate": "learning_rate",
                         "Minimum Replay History": "min_replay_history",
                         "Number of Atoms": "num_atoms", 
                         "Number of Convolutional Layers": "convs", 
                         "Number of Dense Layers": "depths",
-                        "Replay Capacity": "replay_capacity",
+                        # "Replay Capacity": "replay_capacity",
                         "Reward Clipping": "clip_rewards",
                         "Target Update Period": "target_update_periods",
                         "Update Horizon": "update_horizon",
                         "Update Period": "update_periods",
                         "Weight Decay": "weightdecay",
-                        "Width": "widths",
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
