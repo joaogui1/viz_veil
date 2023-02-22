@@ -12,6 +12,7 @@ experiments_mapping = {
                         "Conv. Activation Function": "layer_funct_conv",
                         "Convolutional Normalization": "normalizations_convs", 
                         "Convolutional Width": "CNN_widths",
+                        "Dense Activation Function": "layer_funct_dense",
                         "Dense Normalization": "normalizations",
                         "Dense Width": "widths",
                         "Discount Factor": "gammas",
