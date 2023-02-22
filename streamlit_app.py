@@ -17,7 +17,7 @@ st.title("Lifting the Veil")
 agents = ["DrQ_eps", "DER"]
 
 experiments_mapping = { 
-                        "Adam's epsilon": "epsilon",
+                        "Adam's ε": "epsilon",
                         "Batch Size": "batch_sizes",
                         "Conv. Activation Function": "layer_funct_conv",
                         "Convolutional Normalization": "normalizations_convs", 
@@ -26,6 +26,7 @@ experiments_mapping = {
                         "Dense Normalization": "normalizations",
                         "Dense Width": "widths",
                         "Discount Factor": "gammas",
+                        "Exploration ε": "eps_train",
                         "Learning Rate": "learning_rate",
                         "Minimum Replay History": "min_replay_history",
                         "Number of Atoms": "num_atoms", 
