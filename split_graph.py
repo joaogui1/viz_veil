@@ -9,7 +9,7 @@ agents = ["DrQ_eps", "DER"]
 experiments_mapping = { "Activation Function": "layer_funct_conv",
                         "Adam's epsilon": "epsilon",
                         "Batch Size": "batch_sizes",
-                        # "Convolutional Normalization": "convs_normalization", 
+                        "Convolutional Normalization": "normalizations_convs", 
                         "Dense Normalization": "normalizations",
                         "Discount Factor": "gammas",
                         "Learning Rate": "learning_rate",
