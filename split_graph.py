@@ -6,11 +6,14 @@ from plot_data import plot_iqm, split_plot
 
 agents = ["DrQ_eps", "DER"]
 
-experiments_mapping = { "Activation Function": "layer_funct_conv",
+experiments_mapping = { 
                         "Adam's epsilon": "epsilon",
                         "Batch Size": "batch_sizes",
+                        "Conv. Activation Function": "layer_funct_conv",
                         "Convolutional Normalization": "normalizations_convs", 
+                        "Convolutional Width": "CNN_widths",
                         "Dense Normalization": "normalizations",
+                        "Dense Width": "widths",
                         "Discount Factor": "gammas",
                         "Learning Rate": "learning_rate",
                         "Minimum Replay History": "min_replay_history",
@@ -23,7 +26,6 @@ experiments_mapping = { "Activation Function": "layer_funct_conv",
                         "Update Horizon": "update_horizon",
                         "Update Period": "update_periods",
                         "Weight Decay": "weightdecay",
-                        "Width": "widths",
                     }
 
 for hyperparameter, hyp in experiments_mapping.items():
