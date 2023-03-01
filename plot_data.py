@@ -176,13 +176,13 @@ def plot_all_games(df):
   return fig
 
 def plot_game(agent, env):
-  num_cols = 6
+  num_cols = 7
   num_rows = 3
   fig, axes = plt.subplots(num_rows, num_cols, figsize=(8 * num_cols, 8 * num_rows))
   data_path = 'data/40M_experiments/curves_all_games/*.pickle'
   col, row = 0, 0
   for filename in glob.glob(data_path):
-    if "optimizer" in filename or "gammas" in filename:
+    if "optimizer" in filename:
         continue
     if "atoms" in filename and agent != "DER":
         continue
