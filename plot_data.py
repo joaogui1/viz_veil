@@ -179,10 +179,10 @@ def plot_game(agent, env):
   num_cols = 6
   num_rows = 3
   fig, axes = plt.subplots(num_rows, num_cols, figsize=(8 * num_cols, 8 * num_rows))
-  data_path = 'data/100k_experiments/curves_all_games/*.pickle'
+  data_path = 'data/40M_experiments/curves_all_games/*.pickle'
   col, row = 0, 0
   for filename in glob.glob(data_path):
-    if "optimizer" in filename:
+    if "optimizer" in filename or "gammas" in filename:
         continue
     if "atoms" in filename and agent != "DER":
         continue
@@ -191,6 +191,7 @@ def plot_game(agent, env):
     
     keys = sorted(list(data.keys()))
     hp_key = keys[0] if agent == "DER" else keys[1]
+    print(hp_key)
     env_data = data[hp_key]['returns'][data[hp_key]['returns']['env'] == env]
     
     ax = axes[row, col]
