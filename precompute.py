@@ -2,7 +2,7 @@ import os
 
 from plot_data import plot_game, ATARI_100K_GAMES
 
-for scale in ["40M"]:
+for scale in ["100k", "40M"]:
     for ag in ["DrQ_eps", "DER"]:
         for game in ATARI_100K_GAMES:
             fig = plot_game(ag, game, scale)
