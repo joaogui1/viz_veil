@@ -26,3 +26,8 @@ if game is not None:
 col1.subheader('DrQ(ε) 40M')
 
 col2.subheader('DER 40M')
+
+if game is not None:
+    main_path = f"figures/40M_experiments/game_comparison/{game}"
+    for ag in agents:
+        ag_col[ag].image(main_path+f"/{ag}.png")
