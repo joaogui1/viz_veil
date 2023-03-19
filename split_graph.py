@@ -22,7 +22,7 @@ experiments_mapping = {
                         "Number of Atoms": "num_atoms", 
                         "Number of Convolutional Layers": "convs", 
                         "Number of Dense Layers": "depths",
-                        # "Replay Capacity": "replay_capacity",
+                        "Replay Capacity": "replay_capacity",
                         "Reward Clipping": "clip_rewards",
                         "Target Update Period": "target_update_periods",
                         "Update Horizon": "update_horizon",
