@@ -11,6 +11,30 @@ from rliable import library as rly
 from rliable import metrics
 from rliable import plot_utils
 
+experiments_mapping = { 
+                        "Adam's ε": "epsilon",
+                        "Batch Size": "batch_sizes",
+                        "Conv. Activation Function": "layer_funct_conv",
+                        "Convolutional Normalization": "normalizations_convs", 
+                        "Convolutional Width": "CNN_widths",
+                        "Dense Activation Function": "layer_funct_dense",
+                        "Dense Normalization": "normalizations",
+                        "Dense Width": "widths",
+                        "Discount Factor": "gammas",
+                        "Exploration ε": "eps_train",
+                        "Learning Rate": "learning_rate",
+                        "Minimum Replay History": "min_replay_history",
+                        "Number of Atoms": "num_atoms", 
+                        "Number of Convolutional Layers": "convs", 
+                        "Number of Dense Layers": "depths",
+                        "Replay Capacity": "replay_capacity",
+                        "Reward Clipping": "clip_rewards",
+                        "Target Update Period": "target_update_periods",
+                        "Update Horizon": "update_horizon",
+                        "Update Period": "update_periods",
+                        "Weight Decay": "weightdecay",
+                    }
+
 ATARI_100K_GAMES = [
             'Alien', 'Amidar', 'Assault', 'Asterix', 'BankHeist', 'BattleZone',
             'Boxing', 'Breakout', 'ChopperCommand', 'CrazyClimber', 'DemonAttack',
@@ -197,6 +221,40 @@ def plot_game(agent, env, scale):
     ax = axes[row, col]
     sns.lineplot(x='step', y='val', hue='sweep', data=env_data, ax=ax)
     title = hp_key[len(agent) + 1:]#hp_key.removeprefix(agent + '_')
+    ax.set_title(title, fontsize=22)
+    ax.set_ylabel('Returns', fontsize=18)
+    xlabel = 'Step'
+    ax.set_xlabel(xlabel, fontsize=18)
+    col += 1
+    if col == num_cols:
+        col = 0
+        row += 1
+  return fig
+
+
+def plot_hparam(agent, param, scale):
+  num_cols = 7
+  num_rows = 4
+  fig, axes = plt.subplots(num_rows, num_cols, figsize=(8 * num_cols, 8 * num_rows))
+  data_path = f'data/{scale}_experiments/curves_all_games/{param}.pickle'
+  col, row = 0, 0
+  if "optimizer" == param or 'min_replay_history' == param:
+      return fig
+  if "num_atoms" == param and agent != "DER":
+      return fig
+  with open(data_path, mode='rb') as f:
+      data = pickle.load(f)
+  # import pdb; pdb.set_trace()
+  
+  keys = sorted(list(data.keys()))
+  print(keys)
+  hp_key = keys[0] if agent == "DER" else keys[1]
+  
+  for env in np.unique(data[hp_key]['returns']['env']):
+    env_data = data[hp_key]['returns'][data[hp_key]['returns']['env'] == env]
+    ax = axes[row, col]
+    sns.lineplot(x='step', y='val', hue='sweep', data=env_data, ax=ax)
+    title = env#hp_key.removeprefix(agent + '_')
     ax.set_title(title, fontsize=22)
     ax.set_ylabel('Returns', fontsize=18)
     xlabel = 'Step'
