@@ -2,7 +2,7 @@ import os
 import pickle
 
 import matplotlib.pyplot as plt
-from plot_data import plot, split_plot, experiments_mapping
+from plot_data import plot_iqm, split_plot, experiments_mapping
 
 agents = ["DER"]#["DrQ_eps", "DER"]
 
@@ -50,7 +50,7 @@ for hyperparameter, hyp in experiments_mapping.items():
         print(f"{ag}_{hyp}")
         final_perf_100k[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in final_perf_100k[f'{ag}_{hyp}'].items()}
         final_perf_40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in final_perf_40M[f'{ag}_{hyp}'].items()}
-        fig_iqm = plot(final_perf_40M[f'{ag}_{hyp}'])
+        fig_iqm = plot_iqm(final_perf_40M[f'{ag}_{hyp}'])
 
         save_dir = f"figures/split/IQM/{hyperparameter}"
         if not os.path.isdir(save_dir):

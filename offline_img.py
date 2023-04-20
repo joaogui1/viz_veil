@@ -2,7 +2,7 @@ import os
 import pickle
 
 import matplotlib.pyplot as plt
-from plot_data import plot, plot_human_normalized #, plot_all_games
+from plot_data import plot_iqm, plot_human_normalized #, plot_all_games
 import seaborn as sns
 
 agents = ["DrQ_eps", "DER"]
@@ -57,7 +57,7 @@ for hyperparameter, hyp in experiments_mapping.items():
                 colors = zip(hp_values, sns.color_palette("pastel"))
                 colors = {k:v for (k, v) in colors}
 
-                fig = plot(data[f'{ag}_{hyp}'], colors, hp_values)
+                fig = plot_iqm(data[f'{ag}_{hyp}'], colors, hp_values)
                 
                 
                 save_dir = f"figures/{shim}/IQM/{hyperparameter}"

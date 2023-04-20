@@ -3,9 +3,9 @@ import streamlit as st
 import PIL
 PIL.Image.MAX_IMAGE_PIXELS = 900000000
 
-from plot_data import plot, plot_human_normalized, plot_all_games
+from plot_data import plot_iqm, plot_human_normalized, plot_all_games
 
-plot = st.experimental_memo(plot)
+plot_iqm = st.experimental_memo(plot_iqm)
 plot_human_normalized = st.experimental_memo(plot_human_normalized)
 
 st.set_page_config(layout="wide", page_title="Lifting the Veil")

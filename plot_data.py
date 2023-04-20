@@ -56,7 +56,7 @@ def decorate_axis(ax, wrect=10, hrect=10, labelsize='large'):
   ax.spines['left'].set_position(('outward', hrect))
   ax.spines['bottom'].set_position(('outward', wrect))
 
-def plot(all_experiments, colors=None, hp_values=None):
+def plot_iqm(all_experiments, colors=None, hp_values=None):
   IQM = lambda x: metrics.aggregate_iqm(x) # Interquartile Mean
   OG = lambda x: metrics.aggregate_optimality_gap(x, 1.0) # Optimality Gap
 
