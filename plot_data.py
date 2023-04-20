@@ -3,8 +3,7 @@ import pickle
 
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid.inset_locator import (inset_axes, InsetPosition,
-                                                  mark_inset)
+
 import seaborn as sns
 
 from rliable import library as rly
@@ -238,8 +237,6 @@ def plot_game(agent, env, scale):
   data_path = f'data/{scale}_experiments/curves_all_games/*.pickle'
   col, row = 0, 0
   for filename in glob.glob(data_path):
-    if 'min_replay_history' in filename or "gammas" in filename:
-        continue
     if "atoms" in filename and agent != "DER":
         continue
     with open(filename, mode='rb') as f:
@@ -270,8 +267,6 @@ def plot_hparam(agent, param, scale):
   fig, axes = plt.subplots(num_rows, num_cols, figsize=(8 * num_cols, 8 * num_rows))
   data_path = f'data/{scale}_experiments/curves_all_games/{param}.pickle'
   col, row = 0, 0
-  if 'min_replay_history' == param:
-      return fig
   if "num_atoms" == param and agent != "DER":
       return fig
   with open(data_path, mode='rb') as f:
