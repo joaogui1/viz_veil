@@ -74,6 +74,38 @@ def plot_iqm(all_experiments, colors=None, hp_values=None):
       xlabel='Human Normalized Score')
   return fig
 
+def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
+  IQM = lambda x: metrics.aggregate_iqm(x) # Interquartile Mean
+
+  algorithms = list(dict_100k.keys() | dict_40M.keys())
+  colors = dict(zip(algorithms, sns.color_palette("pastel")))
+  
+  dict_100k = {k + "_100k":v for (k, v) in dict_100k.items()}
+  dict_40M = {k + "_40M":v for (k, v) in dict_40M.items()}
+  if "normalization" in dict_100k.keys():
+    dict_100k["No Normalization"] = dict_100k.pop("normalization")
+    dict_40M["No Normalization"] = dict_40M.pop("normalization")
+
+  all_experiments = {**dict_100k, **dict_40M}
+  hp_values = list(all_experiments.keys())
+  print("Interval plots:", hp_values)
+  colors = {**{k:colors[k.split("_100k")[0]] for k in dict_100k}, 
+            **{k:colors[k.split("_40M")[0]] for k in dict_40M}}
+
+  aggregate_func = lambda x: np.array([IQM(x)])
+  aggregate_scores, aggregate_interval_estimates = rly.get_interval_estimates(
+      all_experiments, aggregate_func, reps=50000)
+
+  fig, _ = plot_utils.plot_interval_estimates(
+      aggregate_scores, 
+      aggregate_interval_estimates,
+      metric_names = ['IQM'],
+      algorithms=hp_values,
+      colors=colors,
+      subfigure_width=5.0,
+      xlabel_y_coordinate=-0.1,
+      xlabel='Human Normalized Score')
+  return fig
 
 my_str="""alien 7127.70 227.80 297638.17 ± 37054.55 464232.43 ± 7988.66 741812.63
 amidar 1719.50 5.80 29660.08 ± 880.39 31331.37 ± 817.79 28634.39
@@ -291,38 +323,4 @@ def split_plot(dict_100k, dict_40M):
   all_axes[1].spines['left'].set_linestyle('-.')
 
   fig.subplots_adjust(wspace=0.0)
-  return fig
-
-
-def plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
-  IQM = lambda x: metrics.aggregate_iqm(x) # Interquartile Mean
-
-  algorithms = list(dict_100k.keys() | dict_40M.keys())
-  colors = dict(zip(algorithms, sns.color_palette("pastel")))
-  
-  dict_100k = {k + "_100k":v for (k, v) in dict_100k.items()}
-  dict_40M = {k + "_40M":v for (k, v) in dict_40M.items()}
-  if "normalization" in dict_100k.keys():
-    dict_100k["No Normalization"] = dict_100k.pop("normalization")
-    dict_40M["No Normalization"] = dict_40M.pop("normalization")
-
-  all_experiments = {**dict_100k, **dict_40M}
-  hp_values = list(all_experiments.keys())
-  print("Interval plots:", hp_values)
-  colors = {**{k:colors[k.split("_100k")[0]] for k in dict_100k}, 
-            **{k:colors[k.split("_40M")[0]] for k in dict_40M}}
-
-  aggregate_func = lambda x: np.array([IQM(x)])
-  aggregate_scores, aggregate_interval_estimates = rly.get_interval_estimates(
-      all_experiments, aggregate_func, reps=50000)
-
-  fig, _ = plot_utils.plot_interval_estimates(
-      aggregate_scores, 
-      aggregate_interval_estimates,
-      metric_names = ['IQM'],
-      algorithms=hp_values,
-      colors=colors,
-      subfigure_width=5.0,
-      xlabel_y_coordinate=-0.1,
-      xlabel='Human Normalized Score')
   return fig
