@@ -41,14 +41,13 @@ experiments_mapping = {
                     }
 hyperparameter = st.radio("Hyperparameter", options=experiments_mapping.keys())
 hyp = experiments_mapping[hyperparameter]
-shim = "40M_experiments"
-shim2 = "split"
+
     
 
 st.header(hyperparameter)
 
-fig1_path = f"figures/{shim}/IQM/{hyperparameter}"
-fig2_path = f"figures/{shim2}/HNS/{hyperparameter}"
+fig1_path = f"figures/split/IQM/{hyperparameter}"
+fig2_path = f"figures/split/HNS/{hyperparameter}"
 
 
 col1, col2 = st.columns(2)
@@ -62,12 +61,12 @@ for ag in agents:
     if ag == "DrQ_eps" and hyp == "num_atoms":
         continue
 
-    for shim in ["100k_experiments", "40M_experiments"]:
-        fig1_path = f"figures/{shim}/IQM/{hyperparameter}" 
-        try:
-            ag_col[ag].image(fig1_path+f"/{ag}.png")
-        except:
-            pass
+    fig1_path = f"figures/split/IQM/{hyperparameter}" 
+    try:
+        ag_col[ag].image(fig1_path+f"/{ag}.png")
+    except Exception as e:
+        print(e)
+        pass
 
     try:
         ag_col[ag].image(fig2_path+f"/{ag}.png")
