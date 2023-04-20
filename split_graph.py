@@ -4,7 +4,7 @@ import pickle
 import matplotlib.pyplot as plt
 from plot_data import plot_iqm, split_plot, experiments_mapping, split_plot_iqm
 
-agents = ["DER"]#["DrQ_eps", "DER"]
+agents = ["DrQ_eps", "DER"]
 
 
 for hyperparameter, hyp in experiments_mapping.items():
@@ -33,6 +33,8 @@ for hyperparameter, hyp in experiments_mapping.items():
 
     for ag in agents:
         if ag == "DrQ_eps" and hyp == "num_atoms":
+            continue
+        if hyp == "epsilon":
             continue
         # data100k[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data100k[f'{ag}_{hyp}'].items()}
         # data40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data40M[f'{ag}_{hyp}'].items()}
