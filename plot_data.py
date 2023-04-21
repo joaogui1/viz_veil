@@ -19,7 +19,7 @@ experiments_mapping = {
                         "Dense Activation Function": "layer_funct_dense",
                         "Dense Normalization": "normalizations",
                         "Dense Width": "widths",
-                        "Discount Factor": "gammas",
+                        # "Discount Factor": "gammas",
                         "Exploration ε": "eps_train",
                         "Learning Rate": "learning_rate",
                         "Minimum Replay History": "min_replay_history",
@@ -237,7 +237,7 @@ def plot_game(agent, env, scale):
   data_path = f'data/{scale}_experiments/curves_all_games/*.pickle'
   col, row = 0, 0
   for filename in glob.glob(data_path):
-    if "atoms" in filename and agent != "DER":
+    if ("atoms" in filename and agent != "DER") or "gammas" in filename:
         continue
     with open(filename, mode='rb') as f:
         data = pickle.load(f)
@@ -271,7 +271,6 @@ def plot_hparam(agent, param, scale):
       return fig
   with open(data_path, mode='rb') as f:
       data = pickle.load(f)
-  # import pdb; pdb.set_trace()
   
   keys = sorted(list(data.keys()))
   print(keys)
