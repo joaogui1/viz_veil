@@ -34,8 +34,6 @@ for hyperparameter, hyp in experiments_mapping.items():
     for ag in agents:
         if ag == "DrQ_eps" and hyp == "num_atoms":
             continue
-        if hyp == "epsilon":
-            continue
         data100k[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data100k[f'{ag}_{hyp}'].items()}
         data40M[f'{ag}_{hyp}'] = {k.split("_")[-1]:v for (k, v) in data40M[f'{ag}_{hyp}'].items()}
         fig = split_plot(data100k[f'{ag}_{hyp}'], data40M[f'{ag}_{hyp}'])

@@ -19,7 +19,7 @@ experiments_mapping = {
                         "Dense Activation Function": "layer_funct_dense",
                         "Dense Normalization": "normalizations",
                         "Dense Width": "widths",
-                        # "Discount Factor": "gammas",
+                        "Discount Factor": "gammas",
                         "Exploration ε": "eps_train",
                         "Learning Rate": "learning_rate",
                         "Minimum Replay History": "min_replay_history",
@@ -237,7 +237,7 @@ def plot_game(agent, env, scale):
   data_path = f'data/{scale}_experiments/curves_all_games/*.pickle'
   col, row = 0, 0
   for filename in glob.glob(data_path):
-    if ("atoms" in filename and agent != "DER") or "gammas" in filename:
+    if "atoms" in filename and agent != "DER":
         continue
     with open(filename, mode='rb') as f:
         data = pickle.load(f)
@@ -245,7 +245,8 @@ def plot_game(agent, env, scale):
     keys = sorted(list(data.keys()))
     hp_key = keys[0] if agent == "DER" else keys[1]
     print(hp_key, scale)
-    env_data = data[hp_key]['returns'][data[hp_key]['returns']['env'] == env]
+    aux = data[hp_key]['returns']
+    env_data = aux[aux['env'] == env]
     
     ax = axes[row, col]
     sns.lineplot(x='step', y='val', hue='sweep', data=env_data, ax=ax)
