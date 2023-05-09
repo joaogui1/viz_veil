@@ -306,7 +306,6 @@ def split_plot(dict_100k, dict_40M):
   colors = {k:v for (k, v) in colors}
   
   _, all_axes[0] = plot_human_normalized(dict_100k, scale="100k", ax=all_axes[0], colors=colors) 
-  # import pdb; pdb.set_trace()
   _, all_axes[1] = plot_human_normalized(dict_40M, scale="40M", ax=all_axes[1], colors=colors)
   
   all_axes[0].legend(loc='upper left', prop={'size': 'large'}).texts[0].set_fontweight('bold')
