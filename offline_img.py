@@ -2,30 +2,11 @@ import os
 import pickle
 
 import matplotlib.pyplot as plt
-from plot_data import plot_iqm, plot_human_normalized #, plot_all_games
+from plot_data import plot_iqm, plot_human_normalized
 import seaborn as sns
+from plot_data import experiments_mapping
 
 agents = ["DrQ_eps", "DER"]
-
-experiments_mapping = { "Activation Function": "layer_funct",
-                        "Adam's epsilon": "epsilon",
-                        "Batch Size": "batch_sizes",
-                        "Convolutional Normalization": "convs_normalization", 
-                        "Dense Normalization": "normalizations",
-                        "Discount Factor": "gammas",
-                        "Learning Rate": "learning_rate",
-                        "Minimum Replay History": "min_replay_history",
-                        "Number of Atoms": "num_atoms", 
-                        "Number of Convolutional Layers": "convs", 
-                        "Number of Dense Layers": "depths",
-                        "Replay Capacity": "replay_capacity",
-                        "Reward Clipping": "clip_rewards",
-                        "Target Update Period": "target_update_periods",
-                        "Update Horizon": "update_horizon",
-                        "Update Period": "update_periods",
-                        "Weight Decay": "weightdecay",
-                        "Width": "widths",
-                    }
 
 for hyperparameter, hyp in experiments_mapping.items():
     shims = ["100k_experiments", "40M_experiments"]
