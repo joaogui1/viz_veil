@@ -56,7 +56,9 @@ def kendall_w(data):
                       for idx, (hp, _) in enumerate(rankings[ATARI_100K_GAMES[0]])}
     mean_ranking = np.mean(list(total_rankings.values()))
     s = sum((mean_ranking - np.array(list(total_rankings.values())))**2)
-    return 12*s/(N_GAMES*N_GAMES*(5**3 - 5))
+    num_hps = len(total_rankings)
+    return 12*s/(N_GAMES*N_GAMES*(num_hps**3 - num_hps))
+
 
 
 if __name__ == "__main__":
