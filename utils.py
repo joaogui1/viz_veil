@@ -14,17 +14,19 @@ N_GAMES = len(ATARI_100K_GAMES)
 Interval = namedtuple("Interval", "hparam lo hi")
 
 def get_int_estimate(data):
-    reliable = rly.get_interval_estimates(
-        data, 
-        lambda x: np.array([metrics.aggregate_iqm(x)]),
-        reps=50
-    )
-    print(reliable)
-    return rly.get_interval_estimates(
-        data, 
-        lambda x: np.array([metrics.aggregate_iqm(x)]),
-        reps=50
-    )[1]
+    # reliable = rly.get_interval_estimates(
+    #     data, 
+    #     lambda x: np.array([metrics.aggregate_iqm(x)]),
+    #     reps=50
+    # )
+    # print(reliable)
+    # return rly.get_interval_estimates(
+    #     data, 
+    #     lambda x: np.array([metrics.aggregate_iqm(x)]),
+    #     reps=50
+    # )[1]
+    # import pdb; pdb.set_trace()
+    return [Interval(k, np.mean(v) - np.std(v), np.mean(v) + np.std(v)) for k, v in data.items()]
 
 def get_iqm_estimate(data):
     return rly.get_interval_estimates(
@@ -45,10 +47,9 @@ def interval_to_ranking(scores):
     begin_equal = 0
     ranks = np.ones((len(scores),))
     for idx, interval in enumerate(rank_by_high):
-        if interval.hi <= rank_by_high[idx - 1].lo: #statistically different
-            ranks[begin_equal:idx] = (begin_equal + 1 + idx - 1 + 1)/2 #average rank
+        if interval.hi <= rank_by_high[idx - 1].lo: # statistically different
+            ranks[begin_equal:idx] = (begin_equal + 1 + idx - 1 + 1)/2 # average rank
             begin_equal = idx
-    import pdb; pdb.set_trace()
     return list(zip([mr.hparam for mr in rank_by_high], ranks))
 
 def iqm_to_ranking(scores):
@@ -65,10 +66,10 @@ def get_game_rankings(data):
             for idx, game in enumerate(ATARI_100K_GAMES)
         }
     game_intervals = {game: 
-                      flatten_interval_dict(
-                        get_int_estimate(transposed_data[game])) 
+                      #flatten_interval_dict(
+                        get_int_estimate(transposed_data[game])#) 
                         for game in transposed_data.keys()}
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     return {game: interval_to_ranking(intervals)
                 for game, intervals in game_intervals.items()}
 

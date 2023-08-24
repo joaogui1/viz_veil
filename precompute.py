@@ -47,32 +47,33 @@ for k, hparam in experiments_mapping.items():
             continue
         print(ag, hp_key)
         W_dict[ag][k] = kendall_w(data[hp_key])
-
-fig = plt.bar(list(W_dict["DER"].keys()), list(W_dict["DER"].values()))
-plt.xticks(list(W_dict["DER"].keys()), rotation='vertical')
-plt.show()
-save_dir = f"figures/40M_experiments/kendall_w/{hparam}"
-if not os.path.isdir(save_dir):
-    os.makedirs(save_dir)
-fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+for ag in ["DER", "DrQ_eps"]:
+    fig, ax = plt.subplots()
+    ax.bar(list(W_dict[ag].keys()), list(W_dict[ag].values()))
+    plt.xticks(list(W_dict[ag].keys()), rotation='vertical')
+    save_dir = f"figures/40M_experiments/kendall_w/"
+    if not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
+    ax.figure.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
 """
 Get Kendall's Tau between the 2 agents
 """
-# get_iqm = lambda data: rly.get_interval_estimates(data, lambda x: np.array([metrics.aggregate_iqm(x)]),reps=500)[0]
+get_iqm = lambda data: rly.get_interval_estimates(data, lambda x: np.array([metrics.aggregate_iqm(x)]),reps=500)[0]
 
-# kendall_taus = dict()
-# for k, hparam in experiments_mapping.items():
-#     if hparam == "num_atoms":
-#         continue
-#     with open(f"data/40M_experiments/final_perf/{hparam}.pickle", mode='rb') as f:
-#         data = pickle.load(f)
-#     scores_DER, scores_DrQ = data[f"DER_{hparam}"], data[f"DrQ_eps_{hparam}"]
-#     iqm_DER = get_iqm(scores_DER)
-#     iqm_DrQ = get_iqm(scores_DrQ)
-#     tau = kendalltau(list(iqm_DER.values()), list(iqm_DrQ.values())).correlation
-#     print(tau, hparam)
-#     kendall_taus[hparam] = tau
-# fig = plt.bar(list(kendall_taus.keys()), list(kendall_taus.values()))
-# plt.xticks(list(kendall_taus.keys()), rotation='vertical')
-# plt.savefig("figures/kendall_tau_agents.pdf", bbox_inches='tight')
+kendall_taus = dict()
+for k, hparam in experiments_mapping.items():
+    if hparam == "num_atoms":
+        continue
+    with open(f"data/40M_experiments/final_perf/{hparam}.pickle", mode='rb') as f:
+        data = pickle.load(f)
+    scores_DER, scores_DrQ = data[f"DER_{hparam}"], data[f"DrQ_eps_{hparam}"]
+    iqm_DER = get_iqm(scores_DER)
+    iqm_DrQ = get_iqm(scores_DrQ)
+    tau = kendalltau(list(iqm_DER.values()), list(iqm_DrQ.values())).correlation
+    print(tau, hparam)
+    kendall_taus[k] = tau
+fig, ax = plt.subplots()
+ax.bar(list(kendall_taus.keys()), list(kendall_taus.values()))
+plt.xticks(list(kendall_taus.keys()), rotation='vertical')
+ax.figure.savefig("figures/kendall_tau_agents.pdf", bbox_inches='tight')
