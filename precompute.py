@@ -10,6 +10,7 @@ from rliable import metrics
 
 from plot_data import plot_game, plot_hparam, ATARI_100K_GAMES, experiments_mapping
 from utils import kendall_w
+from icc2 import get_metric
 
 
 # for scale in ["100k", "40M"]:
@@ -46,7 +47,7 @@ for k, hparam in experiments_mapping.items():
         if hparam == "normalizations":
             continue
         print(ag, hp_key)
-        W_dict[ag][k] = kendall_w(data[hp_key])
+        W_dict[ag][k] = get_metric(data[hp_key])
 for ag in ["DER", "DrQ_eps"]:
     fig, ax = plt.subplots()
     ax.bar(list(W_dict[ag].keys()), list(W_dict[ag].values()))
@@ -59,21 +60,21 @@ for ag in ["DER", "DrQ_eps"]:
 """
 Get Kendall's Tau between the 2 agents
 """
-get_iqm = lambda data: rly.get_interval_estimates(data, lambda x: np.array([metrics.aggregate_iqm(x)]),reps=500)[0]
+# get_iqm = lambda data: rly.get_interval_estimates(data, lambda x: np.array([metrics.aggregate_iqm(x)]),reps=500)[0]
 
-kendall_taus = dict()
-for k, hparam in experiments_mapping.items():
-    if hparam == "num_atoms":
-        continue
-    with open(f"data/40M_experiments/final_perf/{hparam}.pickle", mode='rb') as f:
-        data = pickle.load(f)
-    scores_DER, scores_DrQ = data[f"DER_{hparam}"], data[f"DrQ_eps_{hparam}"]
-    iqm_DER = get_iqm(scores_DER)
-    iqm_DrQ = get_iqm(scores_DrQ)
-    tau = kendalltau(list(iqm_DER.values()), list(iqm_DrQ.values())).correlation
-    print(tau, hparam)
-    kendall_taus[k] = tau
-fig, ax = plt.subplots()
-ax.bar(list(kendall_taus.keys()), list(kendall_taus.values()))
-plt.xticks(list(kendall_taus.keys()), rotation='vertical')
-ax.figure.savefig("figures/kendall_tau_agents.pdf", bbox_inches='tight')
+# kendall_taus = dict()
+# for k, hparam in experiments_mapping.items():
+#     if hparam == "num_atoms":
+#         continue
+#     with open(f"data/40M_experiments/final_perf/{hparam}.pickle", mode='rb') as f:
+#         data = pickle.load(f)
+#     scores_DER, scores_DrQ = data[f"DER_{hparam}"], data[f"DrQ_eps_{hparam}"]
+#     iqm_DER = get_iqm(scores_DER)
+#     iqm_DrQ = get_iqm(scores_DrQ)
+#     tau = kendalltau(list(iqm_DER.values()), list(iqm_DrQ.values())).correlation
+#     print(tau, hparam)
+#     kendall_taus[k] = tau
+# fig, ax = plt.subplots()
+# ax.bar(list(kendall_taus.keys()), list(kendall_taus.values()))
+# plt.xticks(list(kendall_taus.keys()), rotation='vertical')
+# ax.figure.savefig("figures/kendall_tau_agents.pdf", bbox_inches='tight')
