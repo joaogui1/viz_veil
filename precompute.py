@@ -9,8 +9,7 @@ from rliable import library as rly
 from rliable import metrics
 
 from plot_data import plot_game, plot_hparam, ATARI_100K_GAMES, experiments_mapping
-from utils import kendall_w
-from icc2 import get_metric
+from utils import get_metric
 
 
 # for scale in ["100k", "40M"]:
@@ -38,7 +37,7 @@ W_dict = {"DrQ_eps" : dict(),
           "DER": dict()}
 
 for k, hparam in experiments_mapping.items():
-    with open(f'data/40M_experiments/final_perf/{hparam}.pickle', mode='rb') as f:
+    with open(f'data/40M_experiments/human_normalized_curve/{hparam}.pickle', mode='rb') as f:
         data = pickle.load(f)
     keys = list(data.keys())
     for ag, hp_key in zip(["DER", "DrQ_eps"], keys):
@@ -50,9 +49,11 @@ for k, hparam in experiments_mapping.items():
         W_dict[ag][k] = get_metric(data[hp_key])
 for ag in ["DER", "DrQ_eps"]:
     fig, ax = plt.subplots()
-    ax.bar(list(W_dict[ag].keys()), list(W_dict[ag].values()))
+    ax.bar(list(W_dict[ag].keys()), [v[0] for v in W_dict[ag].values()] 
+        #    ,yerr=[v[1] for v in W_dict[ag].values()]
+           )
     plt.xticks(list(W_dict[ag].keys()), rotation='vertical')
-    save_dir = f"figures/40M_experiments/kendall_w/"
+    save_dir = f"figures/40M_experiments/importance_score_aoc/"
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
     ax.figure.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')

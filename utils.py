@@ -1,8 +1,8 @@
 from collections import namedtuple
-import os
 import pickle
 
 import numpy as np
+import pandas as pd
 
 from rliable import library as rly
 from rliable import metrics
@@ -10,6 +10,9 @@ from rliable import metrics
 from plot_data import ATARI_100K_GAMES
 
 N_GAMES = len(ATARI_100K_GAMES)
+
+def area_under_the_curve(data):
+    return  data[:, :, 0]/2 + data[:, :, 1:-1].sum(axis=2) + data[:, :, -1]/2
 
 Interval = namedtuple("Interval", "hparam lo hi")
 
@@ -70,6 +73,8 @@ def iqm_to_ranking(scores):
     return list(zip([mr[0] for mr in rank_by_mean], range(len(rank_by_mean))))
     
 def get_game_rankings(data):
+    if len(list(data.values())[0].shape) == 3:
+        data = {k: area_under_the_curve(v) for k, v in data.items()}
     transposed_data = {
         game: 
             {
@@ -100,9 +105,26 @@ def kendall_w(data):
     return 12*s/(N_GAMES*N_GAMES*(num_hps**3 - num_hps))
 
 
+def get_metric(data):
+    rankings = get_game_rankings(data)
+    rankings = {game:
+            { 
+                tup[0]: tup[1]
+                for tup in rankings[game]
+            }
+            for game in rankings
+           }
+    temp = pd.DataFrame(rankings).values
+    long_form = temp.reshape(-1)
+    hp_column = np.array(list(data.keys())).repeat(len(ATARI_100K_GAMES))
+    df = pd.DataFrame([hp_column, long_form], 
+                      index=["hyperparameter", "ratings"]).T
+    df_deviations = df.groupby(by="hyperparameter").agg("var")["ratings"]
+    return (df_deviations.mean(), df_deviations.std())
+
 
 if __name__ == "__main__":
-    with open(f'data/40M_experiments/final_perf/layer_funct_conv.pickle', mode='rb') as f:
+    with open(f'data/40M_experiments/human_normalized_curve/layer_funct_conv.pickle', mode='rb') as f:
         data = pickle.load(f)
     rankings = get_game_rankings(data['DER_layer_funct_conv'])
     print("rankings:", rankings['Alien'])
