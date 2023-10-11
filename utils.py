@@ -104,7 +104,8 @@ def kendall_w(data):
     print(s, N_GAMES)
     return 12*s/(N_GAMES*N_GAMES*(num_hps**3 - num_hps))
 
-
+def span(row):
+    return np.ptp(row) + 1
 def get_metric(data):
     rankings = get_game_rankings(data)
     rankings = {game:
@@ -119,8 +120,9 @@ def get_metric(data):
     hp_column = np.array(list(data.keys())).repeat(len(ATARI_100K_GAMES))
     df = pd.DataFrame([hp_column, long_form], 
                       index=["hyperparameter", "ratings"]).T
-    df_deviations = df.groupby(by="hyperparameter").agg("var")["ratings"]
-    return (df_deviations.mean(), df_deviations.std())
+    df_deviations = df.groupby(by="hyperparameter").agg(np.ptp)["ratings"]
+
+    return ((df_deviations/(len(df_deviations)-1)).mean(), df_deviations.std())
 
 
 if __name__ == "__main__":

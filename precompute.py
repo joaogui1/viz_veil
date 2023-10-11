@@ -37,7 +37,7 @@ W_dict = {"DrQ_eps" : dict(),
           "DER": dict()}
 
 for k, hparam in experiments_mapping.items():
-    with open(f'data/40M_experiments/human_normalized_curve/{hparam}.pickle', mode='rb') as f:
+    with open(f'data/40M_experiments/final_perf/{hparam}.pickle', mode='rb') as f:
         data = pickle.load(f)
     keys = list(data.keys())
     for ag, hp_key in zip(["DER", "DrQ_eps"], keys):
@@ -53,7 +53,7 @@ for ag in ["DER", "DrQ_eps"]:
         #    ,yerr=[v[1] for v in W_dict[ag].values()]
            )
     plt.xticks(list(W_dict[ag].keys()), rotation='vertical')
-    save_dir = f"figures/40M_experiments/importance_score_aoc/"
+    save_dir = f"figures/40M_experiments/importance_score/"
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
     ax.figure.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
