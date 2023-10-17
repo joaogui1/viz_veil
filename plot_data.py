@@ -214,18 +214,21 @@ def plot_hparam(agent, param, scale):
       data = pickle.load(f)
   
   keys = sorted(list(data.keys()))
-  print(keys)
   hp_key = keys[0] if agent == "DER" else keys[1]
   
   for env in np.unique(data[hp_key]['returns']['env']):
     env_data = data[hp_key]['returns'][data[hp_key]['returns']['env'] == env]
+    env_data = env_data.rename(columns={"sweep": param})
     ax = axes[row, col]
-    sns.lineplot(x='step', y='val', hue='sweep', data=env_data, ax=ax)
+    sns.lineplot(x='step', y='val', hue=param, data=env_data, ax=ax)
+    
     title = env#hp_key.removeprefix(agent + '_')
     ax.set_title(title, fontsize=22)
-    ax.set_ylabel('Returns', fontsize=18)
-    xlabel = 'Step'
+    ylabel = 'Returns' if col == 0 else ""
+    ax.set_ylabel(ylabel, fontsize=18)
+    xlabel = 'Step' if row == num_rows - 1 else ""
     ax.set_xlabel(xlabel, fontsize=18)
+    
     col += 1
     if col == num_cols:
         col = 0
