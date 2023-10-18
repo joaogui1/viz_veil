@@ -83,8 +83,8 @@ def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
   dict_100k = {k + "_100k":v for (k, v) in dict_100k.items()}
   dict_40M = {k + "_40M":v for (k, v) in dict_40M.items()}
   if "normalization" in dict_100k.keys():
-    dict_100k["No Normalization"] = dict_100k.pop("normalization")
-    dict_40M["No Normalization"] = dict_40M.pop("normalization")
+    dict_100k["No Normalization (default)"] = dict_100k.pop("normalization")
+    dict_40M["No Normalization (default)"] = dict_40M.pop("normalization")
 
   all_experiments = {**dict_100k, **dict_40M}
   hp_values = list(all_experiments.keys())
@@ -111,7 +111,7 @@ def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
 def plot_human_normalized(all_experiments, scale='100k', ax=None, colors=None):
   all_experiments = {k.split("_")[-1]:v for (k, v) in all_experiments.items()}
   if "normalization" in all_experiments.keys():
-    all_experiments["No Normalization"] = all_experiments.pop("normalization")
+    all_experiments["No Normalization (default)"] = all_experiments.pop("normalization")
   algorithms = list(all_experiments.keys())
 
   print('algorithms:', algorithms)
@@ -187,10 +187,12 @@ def plot_game(agent, env, scale):
     print(hp_key, scale)
     aux = data[hp_key]['returns']
     env_data = aux[aux['env'] == env]
+    hparam = hp_key[len("DER_"):] if agent == "DER" else hp_key[len("DrQ_eps_"):]
+    env_data = env_data.rename(columns={"sweep": hparam})
     
     ax = axes[row, col]
-    sns.lineplot(x='step', y='val', hue='sweep', data=env_data, ax=ax)
-    title = hp_key[len(agent) + 1:]#hp_key.removeprefix(agent + '_')
+    sns.lineplot(x='step', y='val', hue=hparam, data=env_data, ax=ax)
+    title = hp_key[len(agent) + 1:]
     ax.set_title(title, fontsize=22)
     ylabel = 'Returns' if col == 0 else ""
     ax.set_ylabel(ylabel, fontsize=18)
