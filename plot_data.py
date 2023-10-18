@@ -192,8 +192,9 @@ def plot_game(agent, env, scale):
     sns.lineplot(x='step', y='val', hue='sweep', data=env_data, ax=ax)
     title = hp_key[len(agent) + 1:]#hp_key.removeprefix(agent + '_')
     ax.set_title(title, fontsize=22)
-    ax.set_ylabel('Returns', fontsize=18)
-    xlabel = 'Step'
+    ylabel = 'Returns' if col == 0 else ""
+    ax.set_ylabel(ylabel, fontsize=18)
+    xlabel = 'Step' if row == num_rows - 1 else ""
     ax.set_xlabel(xlabel, fontsize=18)
     col += 1
     if col == num_cols:
