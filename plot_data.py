@@ -188,16 +188,29 @@ def plot_game(agent, env, scale):
     aux = data[hp_key]['returns']
     env_data = aux[aux['env'] == env]
     hparam = hp_key[len("DER_"):] if agent == "DER" else hp_key[len("DrQ_eps_"):]
-    env_data = env_data.rename(columns={"sweep": hparam})
+    param_name = list(experiments_mapping.keys())[list(experiments_mapping.values()).index(hparam)]
+
+    env_data = env_data.rename(columns={"sweep": param_name})
     
     ax = axes[row, col]
-    sns.lineplot(x='step', y='val', hue=hparam, data=env_data, ax=ax)
+    sns.lineplot(x='step', y='val', hue=param_name, data=env_data, ax=ax)
     title = hp_key[len(agent) + 1:]
     ax.set_title(title, fontsize=22)
     ylabel = 'Returns' if col == 0 else ""
     ax.set_ylabel(ylabel, fontsize=18)
     xlabel = 'Step' if row == num_rows - 1 else ""
     ax.set_xlabel(xlabel, fontsize=18)
+    if col==2 and row==0:
+      h, l = ax.get_legend_handles_labels()
+      ph = [plt.plot([], marker="", ls="")[0]]
+      handles = ph + h
+      labels = [param_name] + l
+      print(l, len(h))
+      ax.legend(handles, labels, prop={'size': 24}, bbox_to_anchor=(2.8, 1.4), ncol=7)
+      for legobj in ax.get_legend().legendHandles:
+        legobj.set_linewidth(6.0)
+    else:
+      ax.get_legend().remove()
     col += 1
     if col == num_cols:
         col = 0
@@ -218,19 +231,32 @@ def plot_hparam(agent, param, scale):
   
   keys = sorted(list(data.keys()))
   hp_key = keys[0] if agent == "DER" else keys[1]
+
+  param_name = list(experiments_mapping.keys())[list(experiments_mapping.values()).index(param)]
   
   for env in np.unique(data[hp_key]['returns']['env']):
     env_data = data[hp_key]['returns'][data[hp_key]['returns']['env'] == env]
-    env_data = env_data.rename(columns={"sweep": param})
+    env_data = env_data.rename(columns={"sweep": param_name})
     ax = axes[row, col]
-    sns.lineplot(x='step', y='val', hue=param, data=env_data, ax=ax)
+    sns.lineplot(x='step', y='val', hue=param_name, data=env_data, ax=ax)
     
-    title = env#hp_key.removeprefix(agent + '_')
+    title = env
     ax.set_title(title, fontsize=22)
     ylabel = 'Returns' if col == 0 else ""
     ax.set_ylabel(ylabel, fontsize=18)
     xlabel = 'Step' if row == num_rows - 1 else ""
     ax.set_xlabel(xlabel, fontsize=18)
+    if col==2 and row==0:
+      h, l = ax.get_legend_handles_labels()
+      ph = [plt.plot([], marker="", ls="")[0]]
+      handles = ph + h
+      labels = [param_name] + l
+      print(l, len(h))
+      ax.legend(handles, labels, prop={'size': 24}, bbox_to_anchor=(2.8, 1.4), ncol=7)
+      for legobj in ax.get_legend().legendHandles:
+        legobj.set_linewidth(6.0)
+    else:
+      ax.get_legend().remove()
     
     col += 1
     if col == num_cols:
