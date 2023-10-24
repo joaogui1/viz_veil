@@ -200,17 +200,6 @@ def plot_game(agent, env, scale):
     ax.set_ylabel(ylabel, fontsize=18)
     xlabel = 'Step' if row == num_rows - 1 else ""
     ax.set_xlabel(xlabel, fontsize=18)
-    if col==2 and row==0:
-      h, l = ax.get_legend_handles_labels()
-      ph = [plt.plot([], marker="", ls="")[0]]
-      handles = ph + h
-      labels = [param_name] + l
-      print(l, len(h))
-      ax.legend(handles, labels, prop={'size': 24}, bbox_to_anchor=(2.8, 1.4), ncol=7)
-      for legobj in ax.get_legend().legendHandles:
-        legobj.set_linewidth(6.0)
-    else:
-      ax.get_legend().remove()
     col += 1
     if col == num_cols:
         col = 0
