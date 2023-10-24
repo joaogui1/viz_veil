@@ -1,6 +1,7 @@
 import streamlit as st
 
 from plot_data import plot_game, experiments_mapping
+from utils import THIS_METRIC
 
 plot_game = st.experimental_memo(plot_game)
 
@@ -28,6 +29,9 @@ col1.subheader('DrQ(ε) 40M')
 col2.subheader('DER 40M')
 
 if hparam is not None:
+    col1.subheader(f'DrQ(ε) 40M: {THIS_METRIC["DrQ_eps"][hparam]}')
+
+    col2.subheader(f'DER 40M: {THIS_METRIC["DER"][hparam]}')
     main_path = f"figures/40M_experiments/hparam_comparison/{hparam}"
     for ag in agents:
         ag_col[ag].image(main_path+f"/{ag}.png")

@@ -121,8 +121,9 @@ def get_metric(data):
     df = pd.DataFrame([hp_column, long_form], 
                       index=["hyperparameter", "ratings"]).T
     df_deviations = df.groupby(by="hyperparameter").agg(np.ptp)["ratings"]
+    df_deviations = (df_deviations/(len(df_deviations)-1))
 
-    return ((df_deviations/(len(df_deviations)-1)).mean(), df_deviations.std())
+    return (df_deviations.mean(), df_deviations.std())
 
 
 if __name__ == "__main__":
@@ -131,3 +132,48 @@ if __name__ == "__main__":
     rankings = get_game_rankings(data['DER_layer_funct_conv'])
     print("rankings:", rankings['Alien'])
     print(kendall_w(data['DER_layer_funct_conv']))
+
+
+THIS_METRIC = {
+    'DrQ_eps': 
+               {"Adam's ε": (0.8333333333333334, 0.14433756729740646), 
+                'Batch Size': (0.7083333333333334, 0.25),
+                'Conv. Activation Function': (0.18333333333333335, 0.1329160135825126),
+                'Convolutional Normalization': (0.8333333333333334, 0.14433756729740646),
+                'Convolutional Width': (0.7, 0.14252192813739223),
+                'Dense Activation Function': (0.5166666666666667, 0.09831920802501748),
+                'Dense Width': (0.75, 0.09622504486493767),
+                'Discount Factor': (0.8333333333333334, 0.14433756729740646),
+                'Exploration ε': (0.4, 0.05590169943749474),
+                'Learning Rate': (0.5, 0.19764235376052372),
+                'Minimum Replay History': (0.3333333333333333, 0.0),
+                'Number of Convolutional Layers': (0.75, 0.25),
+                'Number of Dense Layers': (0.6666666666666666, 0.14433756729740646),
+                'Replay Capacity': (0.5416666666666666, 0.08333333333333331),
+                'Reward Clipping': (1.0, 0.0),
+                'Target Update Period': (0.075, 0.06846531968814577),
+                'Update Horizon': (0.775, 0.22360679774997896),
+                'Update Period': (0.6666666666666666, 0.23570226039551584),
+                'Weight Decay': (0.575, 0.11180339887498948)},
+    'DER': 
+            {"Adam's ε": (0.5833333333333334, 0.14433756729740646),
+             'Batch Size': (0.6666666666666666, 0.23570226039551584),
+             'Conv. Activation Function': (0.19999999999999998, 0.10954451150103323),
+             'Convolutional Normalization': (0.5833333333333334, 0.14433756729740646),
+             'Convolutional Width': (0.55, 0.2091650066335189),
+             'Dense Activation Function': (0.4333333333333333, 0.0816496580927726),
+             'Dense Width': (0.7083333333333334, 0.25),
+             'Discount Factor': (0.9166666666666666, 0.14433756729740646),
+             'Exploration ε': (0.175, 0.06846531968814576),
+             'Learning Rate': (0.45, 0.2592055169165965),
+             'Minimum Replay History': (0.20833333333333331, 0.08333333333333333),
+             'Number of Atoms': (0.625, 0.28463752127665554),
+             'Number of Convolutional Layers': (0.75, 0.25),
+             'Number of Dense Layers': (0.5833333333333334, 0.14433756729740646),
+             'Replay Capacity': (0.4583333333333333, 0.08333333333333334),
+             'Reward Clipping': (1.0, 0.0),
+             'Target Update Period': (0.25, 0.08838834764831845),
+             'Update Horizon': (0.7, 0.14252192813739223),
+             'Update Period': (0.5833333333333333, 0.09622504486493762),
+             'Weight Decay': (0.7, 0.06846531968814577)}
+    }
