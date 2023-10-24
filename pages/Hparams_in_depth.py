@@ -1,7 +1,7 @@
 import streamlit as st
 
 from plot_data import plot_game, experiments_mapping
-from utils import THIS_METRIC
+from utils import THIS_METRIC, THIS_METRIC_100k
 
 plot_game = st.experimental_memo(plot_game)
 
@@ -21,6 +21,11 @@ col1.subheader('DrQ(ε) 100k')
 col2.subheader('DER 100k')
 
 if hparam is not None:
+    drq_mean_100k, drq_std_100k = THIS_METRIC_100k["DrQ_eps"][hparam_name]
+    col1.subheader(f'THIS Metric: {drq_mean_100k:.2f} ± {drq_std_100k:.2f}')
+    der_mean_100k, der_std_100k = THIS_METRIC_100k["DER"][hparam_name]
+    col2.subheader(f'THIS Metric: {der_mean_100k:.2f} ± {der_std_100k:.2f}')
+    
     main_path = f"figures/100k_experiments/hparam_comparison/{hparam}"
     for ag in agents:
         ag_col[ag].image(main_path+f"/{ag}.png")
