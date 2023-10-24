@@ -37,7 +37,7 @@ W_dict = {"DrQ_eps" : dict(),
           "DER": dict()}
 
 for k, hparam in experiments_mapping.items():
-    with open(f'data/40M_experiments/final_perf/{hparam}.pickle', mode='rb') as f:
+    with open(f'data/100k_experiments/final_perf/{hparam}.pickle', mode='rb') as f:
         data = pickle.load(f)
     keys = list(data.keys())
     for ag, hp_key in zip(["DER", "DrQ_eps"], keys):
@@ -48,16 +48,16 @@ for k, hparam in experiments_mapping.items():
         print(ag, hp_key)
         W_dict[ag][k] = get_metric(data[hp_key])
 print(W_dict)
-# for ag in ["DER", "DrQ_eps"]:
-#     fig, ax = plt.subplots()
-#     ax.bar(list(W_dict[ag].keys()), [v[0] for v in W_dict[ag].values()] 
-#         #    ,yerr=[v[1] for v in W_dict[ag].values()]
-#            )
-#     plt.xticks(list(W_dict[ag].keys()), rotation='vertical')
-#     save_dir = f"figures/40M_experiments/importance_score/"
-#     if not os.path.isdir(save_dir):
-#         os.makedirs(save_dir)
-#     ax.figure.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
+for ag in ["DER", "DrQ_eps"]:
+    fig, ax = plt.subplots()
+    ax.bar(list(W_dict[ag].keys()), [v[0] for v in W_dict[ag].values()] 
+        #    ,yerr=[v[1] for v in W_dict[ag].values()]
+           )
+    plt.xticks(list(W_dict[ag].keys()), rotation='vertical')
+    save_dir = f"figures/100k_experiments/importance_score/"
+    if not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
+    ax.figure.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
 """
 Get Kendall's Tau between the 2 agents
