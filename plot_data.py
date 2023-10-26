@@ -191,6 +191,10 @@ def plot_game(agent, env, scale):
     param_name = list(experiments_mapping.keys())[list(experiments_mapping.values()).index(hparam)]
 
     env_data = env_data.rename(columns={"sweep": param_name})
+    if scale == "100k":
+      env_data = env_data[env_data["step"] <= 10]
+    else:
+      env_data = env_data[env_data["step"] <= 40]
     
     ax = axes[row, col]
     sns.lineplot(x='step', y='val', hue=param_name, data=env_data, ax=ax)
@@ -200,6 +204,7 @@ def plot_game(agent, env, scale):
     ax.set_ylabel(ylabel, fontsize=18)
     xlabel = 'Step' if row == num_rows - 1 else ""
     ax.set_xlabel(xlabel, fontsize=18)
+    ax.tick_params(axis='both', which='major', labelsize=14)
     col += 1
     if col == num_cols:
         col = 0
@@ -227,6 +232,10 @@ def plot_hparam(agent, param, scale):
     env_data = data[hp_key]['returns'][data[hp_key]['returns']['env'] == env]
     env_data = env_data.rename(columns={"sweep": param_name})
     ax = axes[row, col]
+    if scale == "100k":
+      env_data = env_data[env_data["step"] <= 10]
+    else:
+      env_data = env_data[env_data["step"] <= 40]
     sns.lineplot(x='step', y='val', hue=param_name, data=env_data, ax=ax)
     
     title = env
@@ -235,6 +244,7 @@ def plot_hparam(agent, param, scale):
     ax.set_ylabel(ylabel, fontsize=18)
     xlabel = 'Step' if row == num_rows - 1 else ""
     ax.set_xlabel(xlabel, fontsize=18)
+    ax.tick_params(axis='both', which='major', labelsize=18)
     if col==2 and row==0:
       h, l = ax.get_legend_handles_labels()
       ph = [plt.plot([], marker="", ls="")[0]]
