@@ -17,26 +17,16 @@ def area_under_the_curve(data):
 Interval = namedtuple("Interval", "hparam lo hi")
 
 def get_int_estimate(data):
-    # reliable = rly.get_interval_estimates(
-    #     data, 
-    #     lambda x: np.array([metrics.aggregate_iqm(x)]),
-    #     reps=50
-    # )
-    # print(reliable)
-    # return rly.get_interval_estimates(
-    #     data, 
-    #     lambda x: np.array([metrics.aggregate_iqm(x)]),
-    #     reps=50
-    # )[1]
-    # import pdb; pdb.set_trace()
     return [Interval(k, np.mean(v) - np.std(v), np.mean(v) + np.std(v)) for k, v in data.items()]
 
-def get_iqm_estimate(data):
-    return rly.get_interval_estimates(
+def get_iqm_estimate(data, nreps=50):
+    iqm, range = rly.get_interval_estimates(
         data, 
         lambda x: np.array([metrics.aggregate_iqm(x)]),
-        reps=50
-    )[0]
+        reps=nreps
+    )
+    return [Interval(k.split('_')[-1], iqm[k][0] - range[k][0], iqm[k][0] + range[k][0]) for k in data.keys()]
+ 
 
 def flatten_interval_dict(d):
     return [Interval(k, v[0, 0], v[1, 0]) for k, v in d.items()]
@@ -45,6 +35,7 @@ def flatten_iqm_dict(d):
     return [(k, v) for k, v in d.items()]
 
 def interval_to_ranking(scores):
+    # import pdb;pdb.set_trace()
     rank_by_high = sorted(scores, key=lambda x: -x.hi)
     rank_by_high.append(Interval(-1, -100, -100)) # Sentinel
     
@@ -87,26 +78,21 @@ def get_game_rankings(data):
                       #flatten_interval_dict(
                         get_int_estimate(transposed_data[game])#) 
                         for game in transposed_data.keys()}
-    # import pdb; pdb.set_trace()
     return {game: interval_to_ranking(intervals)
                 for game, intervals in game_intervals.items()}
 
-def kendall_w(data):
-    rankings = get_game_rankings(data)
-    total_rankings = {hp: 
-                      sum(rankings[game][idx][1] for game in rankings.keys())
-                      for idx, (hp, _) in enumerate(rankings[ATARI_100K_GAMES[0]])}
-    
-    mean_ranking = np.mean(list(total_rankings.values()))
-    
-    s = sum((mean_ranking - np.array(list(total_rankings.values())))**2)
-    num_hps = len(total_rankings)
-    print(s, N_GAMES)
-    return 12*s/(N_GAMES*N_GAMES*(num_hps**3 - num_hps))
 
 def span(row):
     return np.ptp(row) + 1
-def get_metric(data):
+
+def get_agent_rankings(data):
+    if len(list(data.values())[0].shape) == 3:
+        data = {k: area_under_the_curve(v) for k, v in data.items()}
+    hp_intervals = get_iqm_estimate(data)
+    return interval_to_ranking(hp_intervals)
+
+
+def get_this_metric(data):
     rankings = get_game_rankings(data)
     rankings = {game:
             { 
@@ -123,6 +109,17 @@ def get_metric(data):
     df_deviations = df.groupby(by="hyperparameter").agg(np.ptp)["ratings"]
     df_deviations = (df_deviations/(len(df_deviations)-1))
 
+    return (df_deviations.mean(), df_deviations.std())
+
+def get_agent_metric(drq_eps_data, der_data):
+    drq_eps_rankings = get_agent_rankings(drq_eps_data) 
+    der_rankings = get_agent_rankings(der_data)
+    # import pdb;pdb.set_trace()
+    df = pd.concat((pd.DataFrame(drq_eps_rankings, columns=["hyperparameter", "mean_rank"]),
+                    pd.DataFrame(der_rankings, columns=["hyperparameter", "mean_rank"]))) 
+    df_deviations = df.groupby(by="hyperparameter").agg(np.ptp)["mean_rank"]
+    df_deviations = (df_deviations/(len(df_deviations)-1))
+    # import pdb;pdb.set_trace();
     return (df_deviations.mean(), df_deviations.std())
 
 
