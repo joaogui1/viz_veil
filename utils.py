@@ -19,13 +19,13 @@ Interval = namedtuple("Interval", "hparam lo hi")
 def get_int_estimate(data):
     return [Interval(k, np.mean(v) - np.std(v), np.mean(v) + np.std(v)) for k, v in data.items()]
 
-def get_iqm_estimate(data, nreps=50):
-    iqm, range = rly.get_interval_estimates(
+def get_iqm_estimate(data, nreps=5000):
+    _, iqm_range = rly.get_interval_estimates(
         data, 
         lambda x: np.array([metrics.aggregate_iqm(x)]),
         reps=nreps
     )
-    return [Interval(k.split('_')[-1], iqm[k][0] - range[k][0], iqm[k][0] + range[k][0]) for k in data.keys()]
+    return [Interval(k.split('_')[-1], iqm_range[k][0], iqm_range[k][1]) for k in data.keys()]
  
 
 def flatten_interval_dict(d):
@@ -35,7 +35,6 @@ def flatten_iqm_dict(d):
     return [(k, v) for k, v in d.items()]
 
 def interval_to_ranking(scores):
-    # import pdb;pdb.set_trace()
     rank_by_high = sorted(scores, key=lambda x: -x.hi)
     rank_by_high.append(Interval(-1, -100, -100)) # Sentinel
     
@@ -114,21 +113,18 @@ def get_this_metric(data):
 def get_agent_metric(drq_eps_data, der_data):
     drq_eps_rankings = get_agent_rankings(drq_eps_data) 
     der_rankings = get_agent_rankings(der_data)
-    # import pdb;pdb.set_trace()
     df = pd.concat((pd.DataFrame(drq_eps_rankings, columns=["hyperparameter", "mean_rank"]),
                     pd.DataFrame(der_rankings, columns=["hyperparameter", "mean_rank"]))) 
     df_deviations = df.groupby(by="hyperparameter").agg(np.ptp)["mean_rank"]
     df_deviations = (df_deviations/(len(df_deviations)-1))
-    # import pdb;pdb.set_trace();
     return (df_deviations.mean(), df_deviations.std())
 
 
 if __name__ == "__main__":
-    with open(f'data/40M_experiments/human_normalized_curve/layer_funct_conv.pickle', mode='rb') as f:
+    with open(f'data/40M_experiments/final_perf/widths.pickle', mode='rb') as f:
         data = pickle.load(f)
-    rankings = get_game_rankings(data['DER_layer_funct_conv'])
-    print("rankings:", rankings['Alien'])
-    print(kendall_w(data['DER_layer_funct_conv']))
+    print(data.keys())
+    print(get_agent_metric(data['DrQ_eps_widths'], data['DER_widths']))
 
 
 THIS_METRIC = {

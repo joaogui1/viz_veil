@@ -68,7 +68,7 @@ kendall_taus = dict()
 for k, hparam in experiments_mapping.items():
     if hparam == "num_atoms":
         continue
-    with open(f"data/40M_experiments/final_perf/{hparam}.pickle", mode='rb') as f:
+    with open(f"data/40M_experiments/human_normalized_curve/{hparam}.pickle", mode='rb') as f:
         data = pickle.load(f)
     scores_DER, scores_DrQ = data[f"DER_{hparam}"], data[f"DrQ_eps_{hparam}"]
     tau = get_agent_metric(scores_DrQ, scores_DER)
@@ -82,5 +82,5 @@ ax.bar(list(kendall_taus.keys()), [v[0] for v in kendall_taus.values()]
         #    ,yerr=[v[1] for v in W_dict[ag].values()]
         )
 plt.xticks(list(kendall_taus.keys()), rotation='vertical')
-ax.figure.savefig("figures/THIS_agents.pdf", bbox_inches='tight')
-ax.figure.savefig("figures/THIS_agents.png", bbox_inches='tight')
+ax.figure.savefig("figures/THIS_agents_aoc.pdf", bbox_inches='tight')
+ax.figure.savefig("figures/THIS_agents_aoc.png", bbox_inches='tight')
