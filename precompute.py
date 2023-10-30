@@ -64,23 +64,20 @@ Get Kendall's Tau between the 2 agents
 """
 get_iqm = lambda data: rly.get_interval_estimates(data, lambda x: np.array([metrics.aggregate_iqm(x)]),reps=500)[0]
 
-kendall_taus = dict()
+this_score = dict()
 for k, hparam in experiments_mapping.items():
     if hparam == "num_atoms":
         continue
     with open(f"data/40M_experiments/human_normalized_curve/{hparam}.pickle", mode='rb') as f:
         data = pickle.load(f)
     scores_DER, scores_DrQ = data[f"DER_{hparam}"], data[f"DrQ_eps_{hparam}"]
-    tau = get_agent_metric(scores_DrQ, scores_DER)
-    # iqm_DER = get_iqm(scores_DER)
-    # iqm_DrQ = get_iqm(scores_DrQ)
-    # tau = kendalltau(list(iqm_DER.values()), list(iqm_DrQ.values())).correlation
-    print(tau, hparam)
-    kendall_taus[k] = tau
+    this = get_agent_metric(scores_DrQ, scores_DER)
+    print(this, hparam)
+    this_score[k] = this
 fig, ax = plt.subplots()
-ax.bar(list(kendall_taus.keys()), [v[0] for v in kendall_taus.values()] 
+ax.bar(list(this_score.keys()), [v[0] for v in this_score.values()] 
         #    ,yerr=[v[1] for v in W_dict[ag].values()]
         )
-plt.xticks(list(kendall_taus.keys()), rotation='vertical')
+plt.xticks(list(this_score.keys()), rotation='vertical')
 ax.figure.savefig("figures/THIS_agents_aoc.pdf", bbox_inches='tight')
 ax.figure.savefig("figures/THIS_agents_aoc.png", bbox_inches='tight')
