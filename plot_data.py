@@ -279,11 +279,11 @@ def split_plot(dict_100k, dict_40M):
   _, all_axes[0] = plot_human_normalized(dict_100k, scale="100k", ax=all_axes[0], colors=colors) 
   _, all_axes[1] = plot_human_normalized(dict_40M, scale="40M", ax=all_axes[1], colors=colors)
   
-  all_axes[0].legend(loc='upper left', prop={'size': 'large'}).texts[0].set_fontweight('bold')
+  all_axes[0].legend(loc='upper left', prop={'size': 'large'})
 
   all_axes[1].set_ylabel('')
   plot_utils._decorate_axis(all_axes[1], hrect=-4, ticklabelsize='xx-large')
-  all_axes[1].legend().texts[0].set_fontweight('bold')
+  all_axes[1].legend()
   all_axes[1].spines['left'].set_linewidth(3)
   all_axes[1].spines['left'].set_linestyle('-.')
 
