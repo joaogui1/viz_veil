@@ -80,8 +80,8 @@ def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
   algorithms = list(dict_100k.keys() | dict_40M.keys())
   colors = dict(zip(algorithms, sns.color_palette("pastel")))
   
-  dict_100k = {k + "_100k":v for (k, v) in dict_100k.items()}
-  dict_40M = {k + "_40M":v for (k, v) in dict_40M.items()}
+  dict_100k = {k + " (100k)":v for (k, v) in dict_100k.items()}
+  dict_40M = {k + " (40M)":v for (k, v) in dict_40M.items()}
   if "normalization" in dict_100k.keys():
     dict_100k["No Normalization (default)"] = dict_100k.pop("normalization (default)")
     dict_40M["No Normalization (default)"] = dict_40M.pop("normalization (default)")
@@ -89,8 +89,8 @@ def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
   all_experiments = {**dict_100k, **dict_40M}
   hp_values = list(all_experiments.keys())
   print("Interval plots:", hp_values)
-  colors = {**{k:colors[k.split("_100k")[0]] for k in dict_100k}, 
-            **{k:colors[k.split("_40M")[0]] for k in dict_40M}}
+  colors = {**{k:colors[k.split(" (100k)")[0]] for k in dict_100k}, 
+            **{k:colors[k.split(" (40M)")[0]] for k in dict_40M}}
 
   aggregate_func = lambda x: np.array([IQM(x)])
   aggregate_scores, aggregate_interval_estimates = rly.get_interval_estimates(
@@ -111,7 +111,7 @@ def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
 def plot_human_normalized(all_experiments, scale='100k', ax=None, colors=None):
   all_experiments = {k.split("_")[-1]:v for (k, v) in all_experiments.items()}
   if "normalization" in all_experiments.keys():
-    all_experiments["No Normalization (default)"] = all_experiments.pop("normalization (default)")
+    all_experiments["No Normalization (default)"] = all_experiments.pop("normalization")
   algorithms = list(all_experiments.keys())
 
   print('algorithms:', algorithms)
@@ -270,8 +270,8 @@ def split_plot(dict_100k, dict_40M):
                               figsize=(14, 6))
 
   if "normalization" in dict_100k.keys():
-    dict_100k["No Normalization (default)"] = dict_100k.pop("normalization (default)")
-    dict_40M["No Normalization (default)"] = dict_40M.pop("normalization (default)")
+    dict_100k["No Normalization (default)"] = dict_100k.pop("normalization")
+    dict_40M["No Normalization (default)"] = dict_40M.pop("normalization")
   algorithms = list(set(dict_100k.keys()) | set(dict_40M.keys()))
   colors = zip(algorithms, sns.color_palette("pastel"))
   colors = {k:v for (k, v) in colors}

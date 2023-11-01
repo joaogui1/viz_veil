@@ -3,7 +3,6 @@ import pickle
 
 from matplotlib import pyplot as plt
 import numpy as np
-from scipy.stats import kendalltau
 
 from rliable import library as rly
 from rliable import metrics
