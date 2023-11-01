@@ -80,8 +80,8 @@ def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
   algorithms = list(dict_100k.keys() | dict_40M.keys())
   colors = dict(zip(algorithms, sns.color_palette("pastel")))
   
-  dict_100k = {k + " (100k)":v for (k, v) in dict_100k.items()}
-  dict_40M = {k + " (40M)":v for (k, v) in dict_40M.items()}
+  dict_100k = {k + "@100k":v for (k, v) in dict_100k.items()}
+  dict_40M = {k + "@40M":v for (k, v) in dict_40M.items()}
   if "normalization" in dict_100k.keys():
     dict_100k["No Normalization (default)"] = dict_100k.pop("normalization (default)")
     dict_40M["No Normalization (default)"] = dict_40M.pop("normalization (default)")
@@ -89,13 +89,14 @@ def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
   all_experiments = {**dict_100k, **dict_40M}
   hp_values = list(all_experiments.keys())
   print("Interval plots:", hp_values)
-  colors = {**{k:colors[k.split(" (100k)")[0]] for k in dict_100k}, 
-            **{k:colors[k.split(" (40M)")[0]] for k in dict_40M}}
+  colors = {**{k:colors[k.split("@100k")[0]] for k in dict_100k}, 
+            **{k:colors[k.split("@40M")[0]] for k in dict_40M}}
 
   aggregate_func = lambda x: np.array([IQM(x)])
   aggregate_scores, aggregate_interval_estimates = rly.get_interval_estimates(
       all_experiments, aggregate_func, reps=50000)
 
+  y_gap = -0.4 if len(hp_values) <= 4 else -0.2 if len(hp_values) < 8 else -0.1
   fig, _ = plot_utils.plot_interval_estimates(
       aggregate_scores, 
       aggregate_interval_estimates,
@@ -103,7 +104,7 @@ def split_plot_iqm(dict_100k, dict_40M, colors=None, hp_values=None):
       algorithms=hp_values,
       colors=colors,
       subfigure_width=5.0,
-      xlabel_y_coordinate=-0.1,
+      xlabel_y_coordinate=y_gap,
       xlabel='Human Normalized Score')
   return fig
 
