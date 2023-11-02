@@ -21,8 +21,11 @@ col1.subheader('DrQ(ε) 100k')
 col2.subheader('DER 100k')
 
 if hparam is not None:
-    drq_mean_100k, drq_std_100k = THIS_METRIC_100k["DrQ_eps"][hparam_name]
-    col1.subheader(f'THIS Metric: {drq_mean_100k:.2f} ± {drq_std_100k:.2f}')
+    if hparam != "num_atoms":
+        drq_mean_100k, drq_std_100k = THIS_METRIC_100k["DrQ_eps"][hparam_name]
+        col1.subheader(f'THIS Metric: {drq_mean_100k:.2f} ± {drq_std_100k:.2f}')
+    else:
+        col1.subheader("Not applicable")
     der_mean_100k, der_std_100k = THIS_METRIC_100k["DER"][hparam_name]
     col2.subheader(f'THIS Metric: {der_mean_100k:.2f} ± {der_std_100k:.2f}')
     
@@ -35,8 +38,11 @@ col1.subheader('DrQ(ε) 40M')
 col2.subheader('DER 40M')
 
 if hparam is not None:
-    drq_mean, drq_std = THIS_METRIC["DrQ_eps"][hparam_name]
-    col1.subheader(f'THIS Metric: {drq_mean:.2f} ± {drq_std:.2f}')
+    if hparam != "num_atoms":
+        drq_mean, drq_std = THIS_METRIC["DrQ_eps"][hparam_name]
+        col1.subheader(f'THIS Metric: {drq_mean:.2f} ± {drq_std:.2f}')
+    else:
+        col1.subheader("Not applicable")
     der_mean, der_std = THIS_METRIC["DER"][hparam_name]
     col2.subheader(f'THIS Metric: {der_mean:.2f} ± {der_std:.2f}')
 
