@@ -205,7 +205,8 @@ def plot_game(agent, env, scale):
     ax.set_ylabel(ylabel, fontsize=18)
     xlabel = 'Step' if row == num_rows - 1 else ""
     ax.set_xlabel(xlabel, fontsize=18)
-    ax.tick_params(axis='both', which='major', labelsize=14)
+    ax.tick_params(axis='both', which='major', labelsize=18)
+    ax.legend(prop=dict(size=18))
     col += 1
     if col == num_cols:
         col = 0
