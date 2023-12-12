@@ -65,6 +65,7 @@ def iqm_to_ranking(scores):
 def get_game_rankings(data):
     if len(list(data.values())[0].shape) == 3:
         data = {k: area_under_the_curve(v) for k, v in data.items()}
+    print([(hp, data[hp].shape) for hp in data.keys()])
     transposed_data = {
         game: 
             {
@@ -123,8 +124,9 @@ def get_agent_metric(drq_eps_data, der_data):
 if __name__ == "__main__":
     with open(f'data/40M_experiments/final_perf/widths.pickle', mode='rb') as f:
         data = pickle.load(f)
-    print(data.keys())
-    print(get_agent_metric(data['DrQ_eps_widths'], data['DER_widths']))
+    print(data['DrQ_eps_widths'].keys())
+    # print(get_agent_metric(data['DrQ_eps_widths'], data['DER_widths']))
+    print(get_this_metric(data))
 
 
 THIS_METRIC = {
@@ -179,6 +181,7 @@ THIS_METRIC_100k = {
         'Convolutional Normalization': (0.4166666666666667, 0.14433756729740643),
         'Convolutional Width': (0.2, 0.16770509831248423),
         'Dense Activation Function': (0.4666666666666666, 0.12110601416389963),
+        'Dense Normalization': (0.5833333333333334, 0.28867513459481287),
         'Dense Width': (0.15, 0.10458250331675945),
         'Discount Factor': (0.7916666666666667, 0.08333333333333337),
         'Exploration ε': (0.3, 0.14252192813739226),
@@ -199,6 +202,7 @@ THIS_METRIC_100k = {
         'Convolutional Normalization': (0.6666666666666666, 0.28867513459481287),
         'Convolutional Width': (0.325, 0.14252192813739226),
         'Dense Activation Function': (0.5166666666666666, 0.14719601443879743),
+        'Dense Normalization': (0.6666666666666666, 0.14433756729740646),
         'Dense Width': (0.375, 0.125),
         'Discount Factor': (0.8333333333333334, 0.13608276348795434),
         'Exploration ε': (0.1, 0.10458250331675945),
@@ -212,4 +216,5 @@ THIS_METRIC_100k = {
         'Target Update Period': (0.125, 0.0),
         'Update Horizon': (0.5166666666666667, 0.2041241452319315),
         'Update Period': (0.43333333333333335, 0.05163977794943222),
-        'Weight Decay': (0.43333333333333335, 0.1505545305418162)}}
+        'Weight Decay': (0.43333333333333335, 0.1505545305418162)}
+}
