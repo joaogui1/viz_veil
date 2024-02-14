@@ -13,51 +13,51 @@ from plot_data import plot_game, plot_hparam, ATARI_100K_GAMES, experiments_mapp
 from utils import get_agent_metric, get_this_metric
 
 
-# for scale in ["100k", "40M"]:
-#     for ag in ["DrQ_eps", "DER"]:
-#         for game in ATARI_100K_GAMES:
-#             fig = plot_game(ag, game, scale)
-#             save_dir = f"figures/{scale}_experiments/game_comparison/{game}"
-#             if not os.path.isdir(save_dir):
-#                 os.makedirs(save_dir)
-#             fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+for scale in ["100k", "40M"]:
+    for ag in ["DrQ_eps", "DER"]:
+        for game in ATARI_100K_GAMES:
+            fig = plot_game(ag, game, scale)
+            save_dir = f"figures/{scale}_experiments/game_comparison/{game}"
+            if not os.path.isdir(save_dir):
+                os.makedirs(save_dir)
+            fig.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
 
-# for scale in ["100k", "40M"]:
-#     for ag in ["DrQ_eps", "DER"]:
-#         for k,hparam in experiments_mapping.items():
-#             fig = plot_hparam(ag, hparam, scale)
-#             save_dir = f"figures/{scale}_experiments/hparam_comparison/{hparam}"
-#             if not os.path.isdir(save_dir):
-#                 os.makedirs(save_dir)
-#             fig.savefig(f"{save_dir}/{ag}.png", bbox_inches='tight')
+for scale in ["100k", "40M"]:
+    for ag in ["DrQ_eps", "DER"]:
+        for k,hparam in experiments_mapping.items():
+            fig = plot_hparam(ag, hparam, scale)
+            save_dir = f"figures/{scale}_experiments/hparam_comparison/{hparam}"
+            if not os.path.isdir(save_dir):
+                os.makedirs(save_dir)
+            fig.savefig(f"{save_dir}/{ag}.pdf", bbox_inches='tight')
 
 """
 Get THIS metric between the 26 environments
 """
 
 
-pd_dict = {'Algorithm': [], 'HParam': [], 'Value': []}
+# pd_dict = {'Algorithm': [], 'HParam': [], 'Value': []}
 
-for k, hparam in experiments_mapping.items():
-    with open(f'data/40M_experiments/final_perf/{hparam}.pickle', mode='rb') as f:
-        data = pickle.load(f)
-    keys = list(data.keys())
-    for ag, hp_key in zip(["DER", "DrQ_eps"], keys):
-        if ag == "DrQ_eps" and hparam == "num_atoms":
-            continue
-        hparam_val =  get_this_metric(data[hp_key])
-        pd_dict['Algorithm'].append(ag)
-        pd_dict['HParam'].append(k)
-        pd_dict['Value'].append(hparam_val)
-df = pd.DataFrame(pd_dict)
-print(df.columns)
-# print(pd_dict)
-der = df[df["Algorithm"] == 'DER']
-print({row['HParam']: row['Value'] for _, row in der.iterrows()})
-drq = df[df["Algorithm"] == 'DrQ_eps']
-print("\n\n")
-print({row['HParam']: row['Value'] for _, row in drq.iterrows()})
+# for k, hparam in experiments_mapping.items():
+#     with open(f'data/40M_experiments/final_perf/{hparam}.pickle', mode='rb') as f:
+#         data = pickle.load(f)
+#     keys = list(data.keys())
+#     for ag, hp_key in zip(["DER", "DrQ_eps"], keys):
+#         if ag == "DrQ_eps" and hparam == "num_atoms":
+#             continue
+#         hparam_val =  get_this_metric(data[hp_key])
+#         pd_dict['Algorithm'].append(ag)
+#         pd_dict['HParam'].append(k)
+#         pd_dict['Value'].append(hparam_val)
+# df = pd.DataFrame(pd_dict)
+# print(df.columns)
+# # print(pd_dict)
+# der = df[df["Algorithm"] == 'DER']
+# print({row['HParam']: row['Value'] for _, row in der.iterrows()})
+# drq = df[df["Algorithm"] == 'DrQ_eps']
+# print("\n\n")
+# print({row['HParam']: row['Value'] for _, row in drq.iterrows()})
 # print(df[df["Algorithm"] == 'DER'][['HParam', 'Value']].to_dict())
 # print(df[df["Algorithm"] == 'DrQ_eps'][['HParam', 'Value']].to_dict())
 # sns.barplot(data=df, x='HParam', y='Value', hue='Algorithm')
